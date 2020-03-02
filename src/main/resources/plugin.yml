@@ -48,6 +48,8 @@ commands:
     permission: uhc.host
   helpopunmute:
     permission: uhc.host
+  forceenable:
+    permission: uhc.host
   health:
     aliases: [h]
   teamchat:

@@ -33,9 +33,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -100,6 +97,7 @@ public class Game extends JavaPlugin {
     private ArrayList<UUID> helpopMuted;
 
     private boolean inGrace;
+    private boolean finalHealHappened;
     private boolean chatMuted;
     private boolean databaseActive;
     private boolean arenaEnabled;
@@ -182,6 +180,7 @@ public class Game extends JavaPlugin {
         relogTask = new RelogTask();
 
         inGrace = true;
+        finalHealHappened = false;
         chatMuted = false;
         arenaEnabled = false;
 
@@ -293,6 +292,7 @@ public class Game extends JavaPlugin {
         getCommand("helpopmute").setExecutor(new HelpopMuteCommand());
         getCommand("helpopunmute").setExecutor(new HelpopMuteCommand());
         getCommand("practice").setExecutor(new PracticeCommand());
+        getCommand("forceenable").setExecutor(new ForceEnableCommand());
 
         getCommand("worldeditor").setExecutor(new WorldEditorCommand());
         getCommand("configeditor").setExecutor(new ConfigEditorCommand());
@@ -621,6 +621,14 @@ public class Game extends JavaPlugin {
 
     public ScoreboardManager getScoreboardManager() {
         return scoreboardManager;
+    }
+
+    public boolean isFinalHealHappened() {
+        return finalHealHappened;
+    }
+
+    public void setFinalHealHappened(boolean finalHealHappened) {
+        this.finalHealHappened = finalHealHappened;
     }
 }
 

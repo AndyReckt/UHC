@@ -63,13 +63,18 @@ public class TimeTask {
 
                 if (uptimeMinutes == game.getConfigManager().getFinalHeal()) {
                     if (uptimeSeconds == 0) {
-                        game.getGameManager().executeFinalHeal();
+                        if(!game.isFinalHealHappened()) {
+                            game.getGameManager().executeFinalHeal();
+                            game.setFinalHealHappened(true);
+                        }
                     }
                 }
 
                 if (uptimeMinutes == game.getConfigManager().getGraceTime()) {
                     if (uptimeSeconds == 0) {
-                        game.getGameManager().endGracePeriod();
+                        if(game.isInGrace()) {
+                            game.getGameManager().endGracePeriod();
+                        }
                     }
                 }
 
