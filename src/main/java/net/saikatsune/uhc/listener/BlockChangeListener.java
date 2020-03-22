@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -83,6 +84,32 @@ public class BlockChangeListener implements Listener {
 
         if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
             event.setCancelled(true);
+        } else {
+            if(game.isInGrace()) {
+                switch (event.getBlockPlaced().getType()) {
+                    case FIRE:
+                        event.setCancelled(true);
+                        player.sendMessage(prefix + ChatColor.RED + "You are not allowed to place lava or fire " +
+                                "in grace period to prevent iPvP.");
+                    break;
+                }
+            }
+        }
+    }
+
+    @EventHandler
+    public void handlePlayerBucketEmptyEvent(PlayerBucketEmptyEvent event) {
+        Player player = event.getPlayer();
+
+        Material bucket = event.getBucket();
+
+        if(bucket.toString().contains("LAVA")) {
+            if(game.isInGrace()) {
+                event.setCancelled(true);
+
+                player.sendMessage(prefix + ChatColor.RED + "You are not allowed to place lava or fire " +
+                        "in grace period to prevent iPvP.");
+            }
         }
     }
 

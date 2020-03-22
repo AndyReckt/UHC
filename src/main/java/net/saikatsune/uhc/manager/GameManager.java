@@ -1,19 +1,14 @@
 package net.saikatsune.uhc.manager;
 
-import net.minecraft.server.v1_8_R3.IChatBaseComponent;
-import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.PlayerState;
 import net.saikatsune.uhc.gamestate.GameState;
 import net.saikatsune.uhc.gamestate.states.IngameState;
 import org.bukkit.*;
-import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import spg.lgdev.protocol.viaversion.api.boss.BossBar;
 
 import java.util.*;
 

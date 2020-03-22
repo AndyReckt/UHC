@@ -24,12 +24,11 @@ public class HealCommand implements CommandExecutor {
         if(cmd.getName().equalsIgnoreCase("heal")) {
             if(args.length == 1) {
                 if(args[0].equalsIgnoreCase("all")) {
-                    for (UUID players : game.getPlayers()) {
-
-                        Player allPlayers = Bukkit.getPlayer(players);
-
-                        allPlayers.setHealth(20);
-                        allPlayers.sendMessage(prefix + sColor + "You have been healed by " + mColor + player.getName() + sColor + "!");
+                    for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                        if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                            allPlayers.setHealth(20);
+                            allPlayers.sendMessage(prefix + sColor + "You have been healed by " + mColor + player.getName() + sColor + "!");
+                        }
                     }
                     player.sendMessage(prefix + mColor + "You have healed all players!");
                 } else {

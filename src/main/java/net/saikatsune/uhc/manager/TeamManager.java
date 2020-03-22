@@ -4,6 +4,7 @@ import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.gamestate.states.LobbyState;
 import net.saikatsune.uhc.handler.TeamHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -95,6 +96,19 @@ public class TeamManager {
         if(teamHandler.getTeamMembers().size() == 0) {
             game.getTeamManager().getTeams().remove(teamNumber);
         }
+    }
+
+    public int getTeamKills(Player player) {
+        TeamHandler teamHandler = teams.get(game.getTeamNumber().get(player.getUniqueId()));
+
+        if(teamHandler.getTeamNumber() == -1) {
+            return game.getPlayerKills().get(player.getUniqueId());
+        } else {
+            for (UUID teamMembers : teamHandler.getTeamMembers()) {
+                
+            }
+        }
+        return 0;
     }
 
     public HashMap<Integer, TeamHandler> getTeams() {

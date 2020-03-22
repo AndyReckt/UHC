@@ -14,13 +14,13 @@ import org.bukkit.inventory.ItemStack;
 public class EnchantmentSupport implements Listener {
 
     @EventHandler
-    public void onEnchant(EnchantItemEvent e) {
+    public void handleEnchantItemEvent(EnchantItemEvent e) {
         e.getEnchanter().setLevel(e.getEnchanter().getLevel() - e.getExpLevelCost() + e.whichButton() + 1);
         e.setExpLevelCost(0);
     }
 
     @EventHandler
-    public void onInventoryOpen(InventoryOpenEvent e) {
+    public void handleInventoryOpenEvent(InventoryOpenEvent e) {
         if (e.getInventory().getType().equals(InventoryType.ENCHANTING)) {
             EnchantingInventory en = (EnchantingInventory)e.getInventory();
             en.setSecondary(new ItemStack(Material.INK_SACK, 64, (short)4));
@@ -28,13 +28,13 @@ public class EnchantmentSupport implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
+    public void handleInventoryCloseEvent(InventoryCloseEvent event) {
         if (event.getInventory().getType().equals(InventoryType.ENCHANTING))
             event.getInventory().setItem(1, null);
     }
 
     @EventHandler
-    public void onClick(InventoryClickEvent event) {
+    public void handleInventoryClickEvent(InventoryClickEvent event) {
         if (event.getInventory().getType().equals(InventoryType.ENCHANTING))
             if (event.getRawSlot() == 1)
                 event.setCancelled(true);

@@ -29,15 +29,14 @@ public class GiveAllCommand implements CommandExecutor {
                 if(args.length == 2) {
                     if(Material.getMaterial(args[0]) != null) {
                         if(game.getFileHandler().isNumeric(args[1])) {
-                            for (UUID players : game.getPlayers()) {
-
-                                Player allPlayers = Bukkit.getPlayer(players);
-
-                                allPlayers.getInventory().addItem(new ItemStack(Material.getMaterial(args[0]),
-                                        Integer.parseInt(args[1])));
-                                allPlayers.sendMessage(prefix + sColor + "You received " + mColor + args[1] + "x " +
-                                        args[0] + sColor + "!");
-                                game.getGameManager().playSound();
+                            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                                if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                                    allPlayers.getInventory().addItem(new ItemStack(Material.getMaterial(args[0]),
+                                            Integer.parseInt(args[1])));
+                                    allPlayers.sendMessage(prefix + sColor + "You received " + mColor + args[1] + "x " +
+                                            args[0] + sColor + "!");
+                                    game.getGameManager().playSound();
+                                }
                             }
                             player.sendMessage(prefix + sColor + "You gave every player " + mColor + args[1] + "x " +
                                     args[0] + sColor + "!");

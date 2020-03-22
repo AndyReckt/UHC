@@ -130,9 +130,6 @@ public class CutCleanListener implements Listener {
                     event.getDrops().add(new ItemStack(Material.FEATHER, 1));
                     break;
                 case HORSE:
-                    event.getDrops().clear();
-                    event.getDrops().add(new ItemStack(Material.LEATHER, 1));
-                    break;
                 case SHEEP:
                     event.getDrops().clear();
                     event.getDrops().add(new ItemStack(Material.LEATHER, 1));
