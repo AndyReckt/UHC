@@ -63,10 +63,10 @@ public class GameManager {
         } else if(playerState == PlayerState.SPECTATOR) {
             player.setGameMode(GameMode.CREATIVE);
 
-            for (UUID allPlayers : game.getPlayers()) {
-                Player players = Bukkit.getPlayer(allPlayers);
-
-                players.hidePlayer(player);
+            for (Player players : Bukkit.getOnlinePlayers()) {
+                if(game.getPlayers().contains(players.getUniqueId())) {
+                    players.hidePlayer(player);
+                }
             }
 
             for (Player allPlayers : game.getSpectators()) {

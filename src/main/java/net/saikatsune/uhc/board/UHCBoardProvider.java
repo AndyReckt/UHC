@@ -66,8 +66,6 @@ public class UHCBoardProvider implements BoardProvider {
             for (String string : config.getStringList("SCOREBOARDS.INGAME.LINES")) {
                 string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
                         replace("%gameType%", game.getTeamSizeInString()).
-                        replace("%scattering%", String.valueOf(Bukkit.getWorld("world").getPlayers().size())).
-                        replace("%scattered%", String.valueOf(Bukkit.getWorld("uhc_world").getPlayers().size())).
                         replace("%gameTime%", game.getTimeTask().getFormattedTime()).
                         replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
                         replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).

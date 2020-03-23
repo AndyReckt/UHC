@@ -13,7 +13,6 @@ import net.saikatsune.uhc.gamestate.GameState;
 import net.saikatsune.uhc.gamestate.manager.GameStateManager;
 import net.saikatsune.uhc.handler.FileHandler;
 import net.saikatsune.uhc.handler.InventoryHandler;
-import net.saikatsune.uhc.support.EnchantmentSupport;
 import net.saikatsune.uhc.support.GlassBorderSupport;
 import net.saikatsune.uhc.support.LegacySupport;
 import net.saikatsune.uhc.tasks.ButcherTask;
@@ -300,7 +299,6 @@ public class Game extends JavaPlugin {
 
         pluginManager.registerEvents(new LegacySupport(), this);
         pluginManager.registerEvents(new GlassBorderSupport(), this);
-        pluginManager.registerEvents(new EnchantmentSupport(), this);
 
         pluginManager.registerEvents(new SetupCommand(), this);
         pluginManager.registerEvents(new WorldEditorCommand(), this);
