@@ -23,11 +23,10 @@ public class IngameState extends GameState {
 
         game.setChatMuted(false);
 
-        for(UUID players : game.getPlayers()) {
-
-            Player allPlayers = Bukkit.getPlayer(players);
-
-            allPlayers.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, game.getConfigManager().getStarterFood()));
+        for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+            if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                allPlayers.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, game.getConfigManager().getStarterFood()));
+            }
         }
 
         if(game.getGameManager().isTeamGame()) {

@@ -38,19 +38,18 @@ public class ScatterTask {
             Bukkit.broadcastMessage("");
         }
 
-        for (UUID players : game.getPlayers()) {
+        for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+            if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                Random randomLocation = new Random();
 
-            Player allPlayers = Bukkit.getPlayer(players);
+                int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
 
-            Random randomLocation = new Random();
+                Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
 
-            int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-            int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-            int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
-
-            Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
-
-            game.getGameManager().setScatterLocation(allPlayers, location);
+                game.getGameManager().setScatterLocation(allPlayers, location);
+            }
         }
 
         Bukkit.broadcastMessage(prefix + sColor + "Starting scatter of all players!");
@@ -74,12 +73,11 @@ public class ScatterTask {
                     Bukkit.broadcastMessage(prefix + ChatColor.GREEN + "Finished scatter of all players!");
 
                     if(game.getGameManager().isTeamGame()) {
-                        for (UUID noTeams : game.getPlayers()) {
-
-                            Player allPlayers = Bukkit.getPlayer(noTeams);
-
-                            if(game.getTeamNumber().get(allPlayers.getUniqueId()) == -1) {
-                                game.getTeamManager().createTeam(allPlayers.getUniqueId());
+                        for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                            if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                                if(game.getTeamNumber().get(allPlayers.getUniqueId()) == -1) {
+                                    game.getTeamManager().createTeam(allPlayers.getUniqueId());
+                                }
                             }
                         }
 
@@ -97,12 +95,11 @@ public class ScatterTask {
                         Bukkit.broadcastMessage(prefix + sColor + "All teams have been teleported to their leaders!");
                     }
 
-                    for (UUID players : game.getPlayers()) {
-
-                        Player allPlayers = Bukkit.getPlayer(players);
-
-                        game.getLoggedPlayers().add(allPlayers.getUniqueId());
-                        game.getWhitelisted().add(allPlayers.getUniqueId());
+                    for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                        if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                            game.getLoggedPlayers().add(allPlayers.getUniqueId());
+                            game.getWhitelisted().add(allPlayers.getUniqueId());
+                        }
                     }
 
                     game.getGameManager().setWhitelisted(true);
@@ -123,31 +120,30 @@ public class ScatterTask {
                             }
 
                             if(Scenarios.GONEFISHING.isEnabled()) {
-                                for (UUID players : game.getPlayers()) {
+                                for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                                    if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                                        allPlayers.getInventory().addItem(new ItemStack(Material.ANVIL, 20));
 
-                                    Player allPlayers = Bukkit.getPlayer(players);
+                                        allPlayers.setLevel(30000);
 
-                                    allPlayers.getInventory().addItem(new ItemStack(Material.ANVIL, 20));
-
-                                    allPlayers.setLevel(30000);
-
-                                    ItemStack fishingRod = new ItemStack(Material.FISHING_ROD);
-                                    fishingRod.addUnsafeEnchantment(Enchantment.LUCK, 250);
-                                    fishingRod.addUnsafeEnchantment(Enchantment.LURE, 3);
-                                    fishingRod.addUnsafeEnchantment(Enchantment.DURABILITY, 100);
-                                    allPlayers.getInventory().addItem(fishingRod);
+                                        ItemStack fishingRod = new ItemStack(Material.FISHING_ROD);
+                                        fishingRod.addUnsafeEnchantment(Enchantment.LUCK, 250);
+                                        fishingRod.addUnsafeEnchantment(Enchantment.LURE, 3);
+                                        fishingRod.addUnsafeEnchantment(Enchantment.DURABILITY, 100);
+                                        allPlayers.getInventory().addItem(fishingRod);
+                                    }
                                 }
                             }
 
                             if(Scenarios.INFINITEENCHANT.isEnabled()) {
-                                for (UUID players : game.getPlayers()) {
-                                    Player allPlayers = Bukkit.getPlayer(players);
-
-                                    allPlayers.setLevel(30000);
-                                    allPlayers.getInventory().addItem(new ItemStack(Material.ENCHANTMENT_TABLE, 64));
-                                    allPlayers.getInventory().addItem(new ItemStack(Material.ANVIL, 64));
-                                    allPlayers.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 64));
-                                    allPlayers.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 64));
+                                for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                                    if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                                        allPlayers.setLevel(30000);
+                                        allPlayers.getInventory().addItem(new ItemStack(Material.ENCHANTMENT_TABLE, 64));
+                                        allPlayers.getInventory().addItem(new ItemStack(Material.ANVIL, 64));
+                                        allPlayers.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 64));
+                                        allPlayers.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 64));
+                                    }
                                 }
                             }
                         }

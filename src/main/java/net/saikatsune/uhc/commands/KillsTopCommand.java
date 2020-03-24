@@ -27,13 +27,8 @@ public class KillsTopCommand implements CommandExecutor {
             player.sendMessage("");
 
             Map<UUID, Integer> unsortedkills = new HashMap<>();
-            for(UUID players : game.getPlayers()) {
-
-                Player allPlayers = Bukkit.getPlayer(players);
-
-                if(game.getPlayers().contains(players)) {
-                    unsortedkills.put(allPlayers.getUniqueId(), game.getPlayerKills().get(allPlayers.getUniqueId()));
-                }
+            for(Player allPlayers : Bukkit.getOnlinePlayers()) {
+                unsortedkills.put(allPlayers.getUniqueId(), game.getPlayerKills().get(allPlayers.getUniqueId()));
             }
             Map<UUID, Integer> kills = sortByValue(unsortedkills);
             int x = 1;

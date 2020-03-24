@@ -145,7 +145,7 @@ public class GameManager {
 
                     for (UUID players : game.getPlayers()) {
 
-                        Player allPlayers = Bukkit.getPlayer(players);
+                        OfflinePlayer allPlayers = Bukkit.getOfflinePlayer(players);
 
                         Bukkit.broadcastMessage(prefix + mColor + "Congratulations to " + allPlayers.getName() + " for winning this game!");
 
@@ -153,12 +153,16 @@ public class GameManager {
                             game.getDatabaseManager().addWins(allPlayers, 1);
                         }
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                allPlayers.getWorld().spawn(allPlayers.getLocation(), Firework.class);
-                            }
-                        }.runTaskTimer(game, 0, 20);
+                        if(allPlayers.isOnline()) {
+                            Player player = Bukkit.getPlayer(players);
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    player.getWorld().spawn(player.getLocation(), Firework.class);
+                                }
+                            }.runTaskTimer(game, 0, 20);
+                        }
                     }
 
                     Bukkit.broadcastMessage(prefix + ChatColor.RED + "The server restarts in 1 minute!");
@@ -180,7 +184,7 @@ public class GameManager {
 
                     for (UUID players : game.getPlayers()) {
 
-                        Player allPlayers = Bukkit.getPlayer(players);
+                        OfflinePlayer allPlayers = Bukkit.getOfflinePlayer(players);
 
                         winnerNames.add(allPlayers.getName());
 
@@ -188,12 +192,16 @@ public class GameManager {
                             game.getDatabaseManager().addWins(allPlayers, 1);
                         }
 
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
-                                allPlayers.getWorld().spawn(allPlayers.getLocation(), Firework.class);
-                            }
-                        }.runTaskTimer(game, 0, 20);
+                        if(allPlayers.isOnline()) {
+                            Player player = Bukkit.getPlayer(players);
+
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    player.getWorld().spawn(player.getLocation(), Firework.class);
+                                }
+                            }.runTaskTimer(game, 0, 20);
+                        }
                     }
 
                     String[] stringArray = winnerNames.toArray(new String[winnerNames.size()]);

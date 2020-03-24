@@ -29,18 +29,17 @@ public class TeamChatCommand implements CommandExecutor {
                     if(game.getGameManager().isTeamGame()) {
                         if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
                             TeamHandler teamHandler = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId()));
-                            for (UUID players : game.getPlayers()) {
+                            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                                if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                                    if(teamHandler.getTeamMembers().contains(allPlayers.getUniqueId())) {
+                                        StringBuilder stringBuilder = new StringBuilder();
 
-                                Player allPlayers = Bukkit.getPlayer(players);
+                                        for (String strings : args) {
+                                            stringBuilder.append(strings).append(" ");
+                                        }
 
-                                if(teamHandler.getTeamMembers().contains(allPlayers.getUniqueId())) {
-                                    StringBuilder stringBuilder = new StringBuilder();
-
-                                    for (String strings : args) {
-                                        stringBuilder.append(strings).append(" ");
+                                        allPlayers.sendMessage(prefix + mColor + "[TC] " + player.getName() + ": " + sColor + stringBuilder);
                                     }
-
-                                    allPlayers.sendMessage(prefix + mColor + "[TC] " + player.getName() + ": " + sColor + stringBuilder);
                                 }
                             }
                         } else {

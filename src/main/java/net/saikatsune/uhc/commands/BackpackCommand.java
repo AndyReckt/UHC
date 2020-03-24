@@ -23,7 +23,7 @@ public class BackpackCommand implements CommandExecutor {
                 Player player = (Player) sender;
                 if(Scenarios.BACKPACKS.isEnabled()) {
                     if(game.getGameManager().isTeamGame()) {
-                        if(game.getPlayers().contains(player)) {
+                        if(game.getPlayers().contains(player.getUniqueId())) {
                             if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
                                 if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
                                     TeamHandler teamHandler = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId()));

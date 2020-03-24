@@ -4,13 +4,12 @@ import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.handler.FileHandler;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.util.LinkedList;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class WorldManager {
@@ -37,15 +36,172 @@ public class WorldManager {
     }
 
     public void loadWorld(String worldName, int worldRadius, int loadingSpeed) {
-        Bukkit.broadcastMessage(prefix + sColor + "Started loading the world " + mColor + worldName + sColor + "...");
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb shape square");
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " set " + worldRadius + " " + worldRadius + " 0 0");
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " fill " + loadingSpeed);
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " fill confirm");
+        Bukkit.broadcastMessage(prefix + sColor + "Started clearing the world " + mColor + worldName + sColor + "...");
+        this.clearCenter(Bukkit.getWorld(worldName));
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.broadcastMessage(prefix + sColor + "Started loading the world " + mColor + worldName + sColor + "...");
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb shape square");
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " set " + worldRadius + " " + worldRadius + " 0 0");
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " fill " + loadingSpeed);
+                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " fill confirm");
+            }
+        }.runTaskLater(game, 20 * 20);
+    }
+
+    // COMPLETELY TAKEN FROM BLADIAN'S UHC
+    // LINKS:
+    // GITHUB: https://github.com/BladianYT/UHC
+    // TWITTER: https://twitter.com/BladianMC/
+
+    private void clearCenter(final World world) {
+        final Queue<Location> locationQueue = new ArrayDeque<>();
+
+        final Location max = new Location(world, 125, 160, 125);
+        final Location min = new Location(world, -125, 45, -125);
+
+        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+            for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                    final Location location = new Location(world, x, y, z);
+                    Block block = location.getBlock();
+                    if (block.getType() == Material.LOG || block.getType() == Material.LOG_2 || block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2
+                            || block.getType() == Material.VINE || block.getType() == Material.SNOW || block.getType() == Material.DOUBLE_PLANT
+                            || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_MUSHROOM || block.getType() == Material.BROWN_MUSHROOM) {
+                        locationQueue.add(block.getLocation());
+                        if (x == 125 && z == 125 || x == -125 || z == -125) {
+                            //loop(block, locationQueue);
+                            //Need to try and find a solution for looping
+                        }
+                    }
+                }
+            }
+        }
+
+        final int blocks = locationQueue.size();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (int y = 0; y < 150; y++) {
+                    if (!locationQueue.isEmpty()) {
+                        Location location = locationQueue.poll();
+                        location.getBlock().setType(Material.AIR);
+                    } else {
+                        this.cancel();
+                        if (y == 149) {
+                            Bukkit.broadcastMessage(prefix + sColor + "Finished clearing " + mColor + world.getName() + " " + sColor +
+                                    "by changing " + mColor + blocks + sColor + " blocks.");
+                            Bukkit.broadcastMessage(prefix + sColor + "Started patching " + mColor + world.getName() + sColor + ".");
+                            for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+                                for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                                    Block bl = Bukkit.getWorld("uhc_world").getHighestBlockAt(x, z);
+                                    Block blk = bl.getLocation().add(0, -1, 0).getBlock();
+                                    if (blk.getType() == Material.DIRT) {
+                                        locationQueue.add(blk.getLocation());
+                                    }
+                                }
+                            }
+                            final int blocks2 = locationQueue.size();
+                            new BukkitRunnable() {
+
+                                @Override
+                                public void run() {
+                                    for (int y = 0; y < 150; y++) {
+                                        if (!locationQueue.isEmpty()) {
+                                            Location location = locationQueue.poll();
+                                            location.getBlock().setType(Material.GRASS);
+                                        } else {
+                                            this.cancel();
+                                            if (y == 149) {
+                                                this.cancel();
+                                                Bukkit.broadcastMessage(prefix + sColor + "Finished patching " + mColor + world.getName() + sColor + " by changing " +
+                                                       mColor + blocks2 + sColor + " blocks.");
+                                            }
+                                        }
+                                    }
+                                }
+                            }.runTaskTimer(game, 0L, 1L);
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(game, 0L, 1L);
+    }
+
+    public void prepareSpawn() {
+        final int[] i = {0};
+        final Queue<Location> locationQueue = new ArrayDeque<>();
+        final Queue<Material> materialQueue = new ArrayDeque<>();
+        final World world = Bukkit.getWorld("uhc_world");
+        final Location max = new Location(world, 125, 160, 125);
+        final Location min = new Location(world, -125, 50, -125);
+        for (int x = min.getBlockX(); x <= max.getBlockX(); x++) {
+            for (int y = min.getBlockY(); y <= max.getBlockY(); y++) {
+                for (int z = min.getBlockZ(); z <= max.getBlockZ(); z++) {
+                    final Location location = new Location(world, x, y, z);
+                    Block block = location.getBlock();
+                    if (block.getType() == Material.GRASS) {
+                        locationQueue.add(block.getLocation());
+                        materialQueue.add(Material.STAINED_CLAY);
+                    } else if (block.getType() == Material.LOG || block.getType() == Material.LOG_2 || block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2
+                            || block.getType() == Material.VINE || block.getType() == Material.SNOW || block.getType() == Material.DOUBLE_PLANT
+                            || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_MUSHROOM || block.getType() == Material.BROWN_MUSHROOM) {
+                        locationQueue.add(block.getLocation());
+                        materialQueue.add(Material.AIR);
+                    }
+                }
+            }
+        }
+
+        final int blocks = locationQueue.size();
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                for (int x = 0; x < 150; x++) {
+                    if (!locationQueue.isEmpty()) {
+                        Location location = locationQueue.poll();
+                        Material material = materialQueue.poll();
+                        if (material == Material.STAINED_CLAY) {
+                            int rand = (int) ((Math.random() * 2) + 1);
+                            int data;
+                            if (rand == 1) {
+                                data = 1;
+                            } else {
+                                data = 4;
+                            }
+                            location.getBlock().setType(Material.STAINED_CLAY);
+                            location.getBlock().setData((byte) data);
+                        } else {
+                            location.getBlock().setType(Material.AIR);
+                        }
+                    } else {
+                        this.cancel();
+                        if (x == 149) {
+                            Bukkit.broadcastMessage(prefix + sColor + "Finished clearing " + mColor + world.getName() + sColor + " by " +
+                                    "changing " + mColor + blocks + sColor + " blocks.");
+                        }
+                    }
+                }
+            }
+        }.runTaskTimer(game, 0L, 1L);
+    }
+
+    private void loop(Block block1, Queue<Location> locations) {
+        for (BlockFace blockface : BlockFace.values()) {
+            if (block1.getRelative(blockface).getType().equals(Material.LOG) || block1.getRelative(blockface).getType().equals(Material.LOG_2)
+                    || block1.getRelative(blockface).getType() == Material.LEAVES || block1.getRelative(blockface).getType() == Material.LEAVES_2) {
+                Block block = block1.getRelative(blockface);
+                locations.add(block.getLocation());
+                loop(block, locations);
+            }
+        }
     }
 
     public void shrinkBorder(String worldName, int size) {
-
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "wb " + worldName + " set " + size + " " + size + " 0 0");
     }
 
@@ -92,23 +248,22 @@ public class WorldManager {
             game.getWorldManager().createBorderLayer("uhc_world",100, 4, null);
 
             if(game.getConfigManager().isNether()) {
-                for (UUID players : game.getPlayers()) {
+                for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                    if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                        if(allPlayers.getWorld().getName().equalsIgnoreCase("uhc_nether")) {
 
-                    Player allPlayers = Bukkit.getPlayer(players);
+                            Random randomLocation = new Random();
 
-                    if(allPlayers.getWorld().getName().equalsIgnoreCase("uhc_nether")) {
+                            int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                            int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                            int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
 
-                        Random randomLocation = new Random();
+                            Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
 
-                        int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                        int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                        int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
+                            game.getGameManager().setScatterLocation(allPlayers, location);
 
-                        Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
-
-                        game.getGameManager().setScatterLocation(allPlayers, location);
-                        
-                        allPlayers.teleport(game.getScatterLocation().get(allPlayers));
+                            allPlayers.teleport(game.getScatterLocation().get(allPlayers));
+                        }
                     }
                 }
             }

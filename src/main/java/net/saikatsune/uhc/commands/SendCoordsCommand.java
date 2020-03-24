@@ -28,10 +28,8 @@ public class SendCoordsCommand implements CommandExecutor {
                 if(game.getGameManager().isTeamGame()) {
                     if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
                         TeamHandler teamHandler = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId()));
-                        for (UUID players : game.getPlayers()) {
 
-                            Player allPlayers = Bukkit.getPlayer(players);
-
+                        for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                             if(teamHandler.getTeamMembers().contains(allPlayers.getUniqueId())) {
                                 allPlayers.sendMessage(prefix + mColor + player.getName() + "'s coordinates: " + sColor +
                                         player.getLocation().getBlockX() + "/" + player.getLocation().getBlockY() + "/" + player.getLocation().getBlockZ() + "!");

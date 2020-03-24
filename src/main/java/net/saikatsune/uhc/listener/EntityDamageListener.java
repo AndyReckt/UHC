@@ -106,12 +106,16 @@ public class EntityDamageListener implements Listener {
 
                         game.getCombatVillagerUUID().remove(villagerKey);
 
+                        game.getPlayers().remove(villagerConnectedToPlayer.getUniqueId());
+
+                        /*
                         try {
                             game.getPlayers().remove(villagerConnectedToPlayer.getUniqueId());
                         } catch (Exception ignored) {
                             //Bukkit.broadcastMessage("§f§l[DEBUG] Was not able to remove a player from the players list. " +
                             //villagerConnectedToPlayer.getName() + "; " + villagerConnectedToPlayer.getUniqueId());
                         }
+                         */
                     }
                     game.getGameManager().checkWinner();
                 }

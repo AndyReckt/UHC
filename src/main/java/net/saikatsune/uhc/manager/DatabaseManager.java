@@ -129,7 +129,7 @@ public class DatabaseManager {
         return 0;
     }
 
-    public void addWins(Player player, int wins) {
+    public void addWins(OfflinePlayer player, int wins) {
         try {
             PreparedStatement statement = connection.prepareStatement("UPDATE STATS SET WINS=? WHERE UUID=?");
 

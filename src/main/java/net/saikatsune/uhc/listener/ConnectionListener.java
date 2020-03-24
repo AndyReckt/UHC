@@ -48,11 +48,11 @@ public class ConnectionListener implements Listener {
 
             game.getGameManager().setPlayerState(player, PlayerState.PLAYER);
 
-            for (UUID allPlayers : game.getPlayers()) {
-                Player players = Bukkit.getPlayer(allPlayers);
-
-                players.showPlayer(player);
-                player.showPlayer(players);
+            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                    allPlayers.showPlayer(player);
+                    player.showPlayer(allPlayers);
+                }
             }
         } else if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(!game.getLoggedPlayers().contains(player.getUniqueId())) {

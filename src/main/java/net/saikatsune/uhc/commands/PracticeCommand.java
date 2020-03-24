@@ -56,10 +56,7 @@ public class PracticeCommand implements CommandExecutor {
                                 if(game.isArenaEnabled()) {
                                     game.setArenaEnabled(false);
 
-                                    for (UUID players : game.getPlayers()) {
-
-                                        Player allPlayers = Bukkit.getPlayer(players);
-
+                                    for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                                         if(allPlayers.getWorld().getName().equalsIgnoreCase("uhc_practice")) {
                                             allPlayers.teleport(game.getLocationManager().getLocation("Spawn-Location"));
 
@@ -68,7 +65,6 @@ public class PracticeCommand implements CommandExecutor {
                                             allPlayers.setHealth(20);
                                         }
                                     }
-
                                     game.getArenaPlayers().clear();
 
                                     Bukkit.broadcastMessage(prefix + ChatColor.RED + "The arena has been disabled!");
