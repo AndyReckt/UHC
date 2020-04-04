@@ -1,7 +1,9 @@
 package net.saikatsune.uhc.commands;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.gamestate.states.LobbyState;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,29 +23,33 @@ public class KillsTopCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender player, Command cmd, String label, String[] args) {
         if(cmd.getName().equalsIgnoreCase("killstop")) {
-            player.sendMessage("§8§m----------------------------");
-            player.sendMessage(mColor + "Top 10 Kills: ");
+            if(!(game.getGameStateManager().getCurrentGameState() instanceof LobbyState)) {
+                player.sendMessage("§8§m----------------------------");
+                player.sendMessage(mColor + "Top 10 Kills: ");
 
-            player.sendMessage("");
+                player.sendMessage("");
 
-            Map<UUID, Integer> unsortedkills = new HashMap<>();
-            for(Player allPlayers : Bukkit.getOnlinePlayers()) {
-                unsortedkills.put(allPlayers.getUniqueId(), game.getPlayerKills().get(allPlayers.getUniqueId()));
-            }
-            Map<UUID, Integer> kills = sortByValue(unsortedkills);
-            int x = 1;
-            for(Object object : kills.keySet()) {
-                if(x != 11) {
-                    UUID uuid = (UUID) object;
-                    if(kills.get(uuid) != 0) {
-                        player.sendMessage(sColor + "- " + mColor + Bukkit.getOfflinePlayer(uuid).getName() + sColor + ": " + kills.get(uuid));
-                    }
-                    x++;
-                } else {
-                    break;
+                Map<UUID, Integer> unsortedkills = new HashMap<>();
+                for(Player allPlayers : Bukkit.getOnlinePlayers()) {
+                    unsortedkills.put(allPlayers.getUniqueId(), game.getPlayerKills().get(allPlayers.getUniqueId()));
                 }
+                Map<UUID, Integer> kills = sortByValue(unsortedkills);
+                int x = 1;
+                for(Object object : kills.keySet()) {
+                    if(x != 11) {
+                        UUID uuid = (UUID) object;
+                        if(kills.get(uuid) != 0) {
+                            player.sendMessage(sColor + "- " + mColor + Bukkit.getOfflinePlayer(uuid).getName() + sColor + ": " + kills.get(uuid));
+                        }
+                        x++;
+                    } else {
+                        break;
+                    }
+                }
+                player.sendMessage("§8§m----------------------------");
+            } else {
+                player.sendMessage(prefix + ChatColor.RED + "There is currently no game running.");
             }
-            player.sendMessage("§8§m----------------------------");
         }
         return false;
     }

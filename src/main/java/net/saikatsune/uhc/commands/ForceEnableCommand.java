@@ -34,9 +34,13 @@ public class ForceEnableCommand implements CommandExecutor {
                                 sender.sendMessage(game.getPrefix() + ChatColor.RED +
                                         "If you want to heal all players use /heal all.");
                             }
+                        } else if (args[0].equalsIgnoreCase("butcher")) {
+                            game.getButcherTask().run();
+                            sender.sendMessage(game.getPrefix() + ChatColor.YELLOW + "Successfully executed the butcher task.");
                         } else {
                             sender.sendMessage(ChatColor.RED + "Usage: /forceenable pvp");
                             sender.sendMessage(ChatColor.RED + "Usage: /forceenable heal");
+                            sender.sendMessage(ChatColor.RED + "Usage: /forceenable butcher");
                         }
                     } else {
                         sender.sendMessage(game.getPrefix() + ChatColor.RED + "There is currently no game running!");
@@ -44,6 +48,7 @@ public class ForceEnableCommand implements CommandExecutor {
                 } else {
                     sender.sendMessage(ChatColor.RED + "Usage: /forceenable pvp");
                     sender.sendMessage(ChatColor.RED + "Usage: /forceenable heal");
+                    sender.sendMessage(ChatColor.RED + "Usage: /forceenable butcher");
                 }
             }
         }

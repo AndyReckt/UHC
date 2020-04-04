@@ -24,6 +24,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import java.util.UUID;
 
+@SuppressWarnings("DuplicateCondition")
 public class ConnectionListener implements Listener {
 
     private Game game = Game.getInstance();
@@ -34,8 +35,14 @@ public class ConnectionListener implements Listener {
 
         Player player = event.getPlayer();
 
+        game.getArenaPlayers().remove(player.getUniqueId());
+
         if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
             game.getGameManager().resetPlayer(player);
+
+            for (PotionEffect potionEffect : player.getActivePotionEffects()) {
+                player.removePotionEffect(potionEffect.getType());
+            }
 
             try {
                 player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
@@ -64,6 +71,7 @@ public class ConnectionListener implements Listener {
 
                 game.getGameManager().setPlayerState(player, PlayerState.SPECTATOR);
             } else {
+                /*
                 if(game.getGameManager().isTeamGame()) {
                     if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
                         TeamHandler teamHandler = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId()));
@@ -74,6 +82,7 @@ public class ConnectionListener implements Listener {
                         }
                     }
                 }
+                 */
 
                 /*
                 for (UUID allPlayers : game.getPlayers()) {
@@ -88,13 +97,6 @@ public class ConnectionListener implements Listener {
                 game.getGameManager().removeCombatVillager(game.getCombatVillagerUUID().get(player.getUniqueId()));
 
                 game.getGameManager().setPlayerState(player, PlayerState.PLAYER);
-            }
-        }
-
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-            if(potionEffect.getType() == PotionEffectType.SLOW || potionEffect.getType() == PotionEffectType.BLINDNESS
-                    || potionEffect.getType() == PotionEffectType.JUMP) {
-                player.removePotionEffect(potionEffect.getType());
             }
         }
 
@@ -116,25 +118,35 @@ public class ConnectionListener implements Listener {
 
         //game.getPlayers().remove(player.getUniqueId());
 
+        /*
         if(game.getGameManager().isTeamGame()) {
             if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
                 game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(player.getUniqueId()), player.getUniqueId());
             }
         }
+         */
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(!game.getSpectators().contains(player)) {
                 game.getGameManager().spawnCombatVillager(player);
                 game.registerPlayerDeath(player);
             }
-        } else if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
+
+            if(game.getPlayers().contains(player.getUniqueId())) {
+                game.getLoggedOutPlayers().add(player.getUniqueId());
+            }
+        } else if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState || game.getGameStateManager().getCurrentGameState() instanceof ScatteringState) {
             game.getPlayers().remove(player.getUniqueId());
+
+            if(game.getGameManager().isTeamGame()) {
+                if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
+                    game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(player.getUniqueId()), player.getUniqueId());
+                }
+            }
         }
 
-        game.getLoggedOutPlayers().add(player.getUniqueId());
-
+        game.getArenaPlayers().remove(player.getUniqueId());
         game.getSpectators().remove(player);
-
         game.getGameManager().checkWinner();
     }
 

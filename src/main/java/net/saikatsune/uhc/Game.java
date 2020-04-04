@@ -36,6 +36,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class Game extends JavaPlugin {
@@ -80,6 +81,10 @@ public class Game extends JavaPlugin {
 
     private HashMap<UUID, Integer> logoutTimer;
 
+    private HashMap<Villager, UUID> playerBoundToVillager;
+
+    private ArrayList<UUID> deadPlayersByUUID;
+
     private ArrayList<UUID> players;
     private ArrayList<Player> spectators;
 
@@ -94,6 +99,8 @@ public class Game extends JavaPlugin {
     private ArrayList<UUID> receiveGoldAlerts;
 
     private ArrayList<UUID> helpopMuted;
+
+    private List<String> scenariosInList;
 
     private boolean inGrace;
     private boolean finalHealHappened;
@@ -158,6 +165,8 @@ public class Game extends JavaPlugin {
 
         logoutTimer = new HashMap<>();
 
+        playerBoundToVillager = new HashMap<>();
+
         players = new ArrayList<>();
         spectators = new ArrayList<>();
 
@@ -172,6 +181,10 @@ public class Game extends JavaPlugin {
         receiveGoldAlerts = new ArrayList<>();
 
         helpopMuted = new ArrayList<>();
+
+        scenariosInList = new ArrayList<>();
+
+        deadPlayersByUUID = new ArrayList<>();
 
         scatterTask = new ScatterTask();
         timeTask = new TimeTask();
@@ -273,7 +286,7 @@ public class Game extends JavaPlugin {
         getCommand("rates").setExecutor(new RatesCommand());
         getCommand("config").setExecutor(new ConfigCommand());
         getCommand("staff").setExecutor(new StaffCommand());
-        getCommand("scatter").setExecutor(new ScatterCommand());
+        getCommand("scatter").setExecutor(new LatescatterCommand());
         getCommand("teamchat").setExecutor(new TeamChatCommand());
         getCommand("scenarios").setExecutor(new ScenariosCommand());
         getCommand("sendcoords").setExecutor(new SendCoordsCommand());
@@ -338,6 +351,8 @@ public class Game extends JavaPlugin {
         pluginManager.registerEvents(new LimitationsListener(), this);
         pluginManager.registerEvents(new BarebonesListener(), this);
         pluginManager.registerEvents(new FlowerPowerListener(), this);
+        pluginManager.registerEvents(new BleedingSweetsListener(), this);
+        pluginManager.registerEvents(new SwitcherooListener(), this);
 
         pluginManager.registerEvents(new WebCageListener(), this);
         pluginManager.registerEvents(new NoCleanListener(), this);
@@ -623,6 +638,18 @@ public class Game extends JavaPlugin {
 
     public void setFinalHealHappened(boolean finalHealHappened) {
         this.finalHealHappened = finalHealHappened;
+    }
+
+    public List<String> getScenariosInList() {
+        return scenariosInList;
+    }
+
+    public ArrayList<UUID> getDeadPlayersByUUID() {
+        return deadPlayersByUUID;
+    }
+
+    public HashMap<Villager, UUID> getPlayerNameBoundToVillager() {
+        return playerBoundToVillager;
     }
 }
 

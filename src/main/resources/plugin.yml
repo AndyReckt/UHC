@@ -28,9 +28,8 @@ commands:
   staff:
     permission: uhc.host
     aliases: [mod]
-  scatter:
-    permission: uhc.host
-    aliases: [latescatter]
+  latescatter:
+    aliases: [scatter]
   respawn:
     permission: uhc.host
     aliases: [revive]

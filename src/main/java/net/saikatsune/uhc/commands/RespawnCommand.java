@@ -52,6 +52,8 @@ public class RespawnCommand implements CommandExecutor {
                                         }
                                     }
 
+                                    game.getLogoutTimer().putIfAbsent(player.getUniqueId(), game.getRelogTimeInMinutes() * 60);
+
                                     Bukkit.broadcastMessage(prefix + mColor + target.getName() + sColor + " has been re-spawned!");
                                 } else {
                                     player.sendMessage(prefix + ChatColor.RED + target.getName() + " hasn't died in this game!");

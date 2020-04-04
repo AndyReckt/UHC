@@ -82,7 +82,12 @@ public class GameManager {
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
                 if(!player.hasPermission("uhc.host")) {
                     player.sendMessage(prefix + ChatColor.YELLOW + "You are now spectating the game.");
-                    player.sendMessage(prefix + ChatColor.YELLOW + "Request a late-scatter with /helpop.");
+
+                    if(!game.getDeadPlayersByUUID().contains(player.getUniqueId())) {
+                        player.sendMessage(prefix + ChatColor.YELLOW + "Late-scatter yourself with /latescatter.");
+                    } else {
+                        player.sendMessage(prefix + ChatColor.RED + "You have already died this game.");
+                    }
                 }
             }
         }
@@ -95,6 +100,9 @@ public class GameManager {
     public void spawnCombatVillager(Player player) {
         Villager villager = (Villager) player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
         villager.setCustomName(ChatColor.RED + "[CombatLogger] " + player.getName());
+
+        game.registerPlayerDeath(player);
+        game.getPlayerNameBoundToVillager().put(villager, player.getUniqueId());
 
         villager.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 127));
 

@@ -1,9 +1,12 @@
 package net.saikatsune.uhc.tasks;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.enums.Scenarios;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -32,13 +35,56 @@ public class RelogTask {
                                     "[" + game.getPlayerKills().get(offlinePlayer.getUniqueId()) + "] " + ChatColor.YELLOW +
                                     "was disconnected for too long and has been disqualified.");
 
+                            try {
+                                for (ItemStack itemStack : game.getDeathInventory().get(offlinePlayer.getUniqueId())) {
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), itemStack);
+                                }
+
+                                for (ItemStack itemStack : game.getDeathArmor().get(offlinePlayer.getUniqueId())) {
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), itemStack);
+                                }
+
+                                if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 5));
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.ARROW, 16));
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.STRING));
+                                }
+
+                                if(Scenarios.GOLDLESS.isEnabled()) {
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 8));
+                                }
+
+                                if(Scenarios.DIAMONDLESS.isEnabled()) {
+                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
+                                }
+                            } catch (Exception ignored) {
+
+                            }
+
                             game.getGameManager().removeCombatVillager(game.getCombatVillagerUUID().get(offlinePlayer.getUniqueId()));
                             game.getLoggedPlayers().remove(offlinePlayer.getUniqueId());
                             game.getWhitelisted().remove(offlinePlayer.getUniqueId());
                             game.getPlayers().remove(offlinePlayer.getUniqueId());
 
+                            game.getDeadPlayersByUUID().add(offlinePlayer.getUniqueId());
+
                             if(game.isDatabaseActive()) {
                                 game.getDatabaseManager().addDeaths(offlinePlayer, 1);
+                            }
+
+                            if(game.getGameManager().isTeamGame()) {
+                                if(game.getTeamNumber().get(offlinePlayer.getUniqueId()) != -1) {
+                                    game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(offlinePlayer.getUniqueId()), offlinePlayer.getUniqueId());
+                                }
                             }
 
                             game.getGameManager().checkWinner();

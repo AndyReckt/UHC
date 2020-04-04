@@ -24,7 +24,7 @@ public enum Scenarios {
     SOUP(false, new ItemHandler(Material.MUSHROOM_SOUP).setDisplayName("§bSoup").build(), new String[]{"When you right click a soup, you regain", "3.5 hearts."}),
     BLOODDIAMONDS(false, new ItemHandler(Material.REDSTONE).setDisplayName("§bBloodDiamonds").build(), new String[]{"When you mine a diamond, you", " lose half a heart."}),
     HASTEYBOYS(false, new ItemHandler(Material.WOOD_PICKAXE).setDisplayName("§bHasteyBoys").build(), new String[]{"Tools automatically enchant", "with efficiency 3."}),
-    DIAMONDLESS(false, new ItemHandler(Material.DIAMOND).setDisplayName("§bDiamondless").build(), new String[]{"You cannot mine diamonds.", "Players drop 1 diamond", "if they die."}),
+    DIAMONDLESS(false, new ItemHandler(Material.DIAMOND_ORE).setDisplayName("§bDiamondless").build(), new String[]{"You cannot mine diamonds.", "Players drop 1 diamond", "if they die."}),
     GOLDLESS(false, new ItemHandler(Material.GOLD_ORE).setDisplayName("§bGoldless").build(), new String[]{"You cannot mine gold.", "Players drop 8 gold", "if they die."}),
     FLOWERPOWER(false, new ItemHandler(Material.YELLOW_FLOWER).setDisplayName("§bFlowerPower").build(), new String[]{"You gain items by", "destroying flowers."}),
     GONEFISHING(false, new ItemHandler(Material.RAW_FISH).setDisplayName("§bGoneFishing").build(), new String[]{"You get an Unbreaking 250 and ", "Luck of the Sea 250 fishing rod along with 20 anvils."}),
@@ -37,7 +37,9 @@ public enum Scenarios {
     WEBCAGE(false, new ItemHandler(Material.WEB).setDisplayName("§bWebcage").build(), new String[]{"When you kill a player a sphere of", " cobwebs surrounds you"}),
     LUCKYLEAVES(false, new ItemHandler(Material.LEAVES).setDisplayName("§bLuckyLeaves").build(), new String[]{"There's a 0.5% chance of golden apples, ", "dropping from decaying leaves"}),
     FIRELESS(false, new ItemHandler(Material.FIRE).setDisplayName("§bFireless").build(), new String[]{"You take no fire damage."}),
-    OREFRENZY(false, new ItemHandler(Material.NETHER_STAR).setDisplayName("§bOreFrenzy").build(), new String[]{"Mining lapis ore will get you a splash potion of healing.", "Mining emeralds will get you 32 arrows.", "Mining redstone ore will get you a book.", "Mining diamond ore will get you a diamond 4 xp bottles.", "Mining quartz will get you a block of TNT."});
+    OREFRENZY(false, new ItemHandler(Material.NETHER_STAR).setDisplayName("§bOreFrenzy").build(), new String[]{"Mining lapis ore will get you a splash potion of healing.", "Mining emeralds will get you 32 arrows.", "Mining redstone ore will get you a book.", "Mining diamond ore will get you a diamond 4 xp bottles.", "Mining quartz will get you a block of TNT."}),
+    BLEEDINGSWEETS(false, new ItemHandler(Material.DIAMOND).setDisplayName("§bBleedingSweets").build(), new String[]{"When a player dies, they will drop ", "1 diamond, 5 gold ingots, 16 arrows and 1 string."}),
+    SWITCHEROO(false, new ItemHandler(Material.ENDER_PEARL).setDisplayName("§bSwitcheroo").build(), new String[]{"When you shoot someone, you trade places with them."});
 
     private Game game = Game.getInstance();
 

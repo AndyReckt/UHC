@@ -29,11 +29,9 @@ public class IngameState extends GameState {
             }
         }
 
-        if(game.getGameManager().isTeamGame()) {
-            Bukkit.broadcastMessage(prefix + ChatColor.RED + "NOTE: Your team gets disbanded, when all team members leave the game!");
-        }
-
         game.getTimeTask().runTask();
+
+        Bukkit.broadcastMessage(prefix + ChatColor.YELLOW + "Remember: Sheep also drop leather.");
 
         game.getButcherTask().run();
         game.getRelogTask().startTask();

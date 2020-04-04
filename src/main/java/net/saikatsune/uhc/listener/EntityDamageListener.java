@@ -6,6 +6,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.PlayerState;
+import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.states.IngameState;
 import net.saikatsune.uhc.gamestate.states.LobbyState;
 import net.saikatsune.uhc.handler.ItemHandler;
@@ -46,6 +47,10 @@ public class EntityDamageListener implements Listener {
                 if(!game.getArenaPlayers().contains(player.getUniqueId())) {
                     event.setCancelled(true);
                 }
+
+                if(event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                    player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
+                }
             }
         } else {
             if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
@@ -73,6 +78,8 @@ public class EntityDamageListener implements Listener {
                 if(villager.getCustomName().contains("[CombatLogger] ")) {
                     Player player = event.getEntity().getKiller();
 
+                    OfflinePlayer dyingPlayer = Bukkit.getOfflinePlayer(game.getPlayerNameBoundToVillager().get(villager));
+
                     game.getPlayerKills().put(player.getUniqueId(), game.getPlayerKills().get(player.getUniqueId()) + 1);
 
                     Bukkit.broadcastMessage(ChatColor.RED + villager.getCustomName() + ChatColor.YELLOW + " was slain " +
@@ -80,33 +87,61 @@ public class EntityDamageListener implements Listener {
                             + "].");
 
                     for (UUID villagerKey : game.getCombatVillagerUUID().keySet()) {
-                        OfflinePlayer villagerConnectedToPlayer = Bukkit.getOfflinePlayer(villagerKey);
-
                         //player.setLevel(player.getLevel() + game.getDeathLevels().get(villagerConnectedToPlayer.getUniqueId()));
 
                         try {
-                            for (ItemStack itemStack : game.getDeathInventory().get(villagerConnectedToPlayer.getUniqueId())) {
+                            for (ItemStack itemStack : game.getDeathInventory().get(dyingPlayer.getUniqueId())) {
                                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
                             }
 
-                            for (ItemStack itemStack : game.getDeathArmor().get(villagerConnectedToPlayer.getUniqueId())) {
+                            for (ItemStack itemStack : game.getDeathArmor().get(dyingPlayer.getUniqueId())) {
                                 player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
+                            }
+
+                            if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                        game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                        game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 5));
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                        game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.ARROW, 16));
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                        game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.STRING));
+                            }
+
+                            if(Scenarios.GOLDLESS.isEnabled()) {
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                        game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 8));
+                            }
+
+                            if(Scenarios.DIAMONDLESS.isEnabled()) {
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                        game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                             }
                         } catch (Exception ignored) {
 
                         }
-                        game.getLoggedPlayers().remove(villagerConnectedToPlayer.getUniqueId());
-                        game.getWhitelisted().remove(villagerConnectedToPlayer.getUniqueId());
 
-                        game.getLoggedOutPlayers().remove(villagerConnectedToPlayer.getUniqueId());
+                        game.getLoggedPlayers().remove(dyingPlayer.getUniqueId());
+                        game.getWhitelisted().remove(dyingPlayer.getUniqueId());
+
+                        game.getLoggedOutPlayers().remove(dyingPlayer.getUniqueId());
+
+                        game.getDeadPlayersByUUID().add(dyingPlayer.getUniqueId());
 
                         if(game.isDatabaseActive()) {
-                            game.getDatabaseManager().addDeaths(villagerConnectedToPlayer, 1);
+                            game.getDatabaseManager().addDeaths(dyingPlayer, 1);
                         }
+
+                        game.getPlayers().remove(dyingPlayer.getUniqueId());
 
                         game.getCombatVillagerUUID().remove(villagerKey);
 
-                        game.getPlayers().remove(villagerConnectedToPlayer.getUniqueId());
+                        if(game.getGameManager().isTeamGame()) {
+                            if(game.getTeamNumber().get(dyingPlayer.getUniqueId()) != -1) {
+                                game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(dyingPlayer.getUniqueId()), dyingPlayer.getUniqueId());
+                            }
+                        }
 
                         /*
                         try {
@@ -175,7 +210,7 @@ public class EntityDamageListener implements Listener {
                     if (event.getEntity() instanceof Player && event.getDamager() instanceof Arrow && ((Arrow)event.getDamager()).getShooter() instanceof Player) {
                         if (((Player)event.getEntity()).getHealth() - event.getFinalDamage() > 0.0D) {
                             ((Player)((Arrow)event.getDamager()).getShooter()).sendMessage(game.getPrefix() + game.getmColor() + player.getName() + "'s" + game.getsColor() +
-                                    " health is at " + ChatColor.RED + Math.round(player.getHealth() - 1) + "❤!");
+                                    " health is at " + ChatColor.RED + Math.round(player.getHealth() - 1) + "❤.");
                         }
                     }
                 }
@@ -274,8 +309,12 @@ public class EntityDamageListener implements Listener {
                     game.getWhitelisted().remove(player.getUniqueId());
                     game.getLoggedPlayers().remove(player.getUniqueId());
 
+                    game.getDeadPlayersByUUID().add(player.getUniqueId());
+
                     if(player.hasPermission("uhc.host")) {
                         game.getInventoryHandler().handleStaffInventory(player);
+                    } else {
+                        player.getInventory().addItem(new ItemStack(Material.COMPASS));
                     }
 
                     if(game.isDatabaseActive()) {
@@ -321,7 +360,7 @@ public class EntityDamageListener implements Listener {
                 Player killer = player.getKiller();
 
                 killer.sendMessage(prefix + mColor + player.getName() + "'s " + sColor + "health is at "
-                        + ChatColor.DARK_RED + player.getHealthScale() + " ❤" + sColor + "!");
+                        + ChatColor.DARK_RED + player.getHealthScale() + " ❤" + sColor + ".");
             }
         }
     }
