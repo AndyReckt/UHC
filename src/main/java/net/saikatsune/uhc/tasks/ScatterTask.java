@@ -13,10 +13,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 
 @SuppressWarnings("deprecation")
@@ -30,6 +27,9 @@ public class ScatterTask {
     private String sColor = game.getsColor();
 
     private int taskID;
+
+    private List<UUID> playersToScatter = new ArrayList<>();
+    private List<UUID> playersScattered = new ArrayList<>();
 
     public void runTask() {
         game.setChatMuted(true);
@@ -49,6 +49,8 @@ public class ScatterTask {
                 Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
 
                 game.getGameManager().setScatterLocation(allPlayers, location);
+
+                playersToScatter.add(allPlayers.getUniqueId());
             }
         }
 
@@ -57,18 +59,31 @@ public class ScatterTask {
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(game, new BukkitRunnable() {
             @Override
             public void run() {
-                int playerNumber = new Random().nextInt(Bukkit.getWorld("world").getPlayers().size());
+                int playerNumber = new Random().nextInt(playersToScatter.size());
                 Player random = (Player) Bukkit.getOnlinePlayers().toArray()[playerNumber];
 
-                if (Bukkit.getWorld("world").getPlayers().contains(random)) {
-
-                    random.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, -5));
-                    random.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 127));
-
-                    random.teleport(game.getScatterLocation().get(random));
+                for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                    if(game.getSpectators().contains(allPlayers)) {
+                        playersToScatter.remove(allPlayers.getUniqueId());
+                    }
                 }
 
-                if (Bukkit.getWorld("world").getPlayers().size() == 0) {
+                if(random.isOnline()) {
+                    if (playersToScatter.contains(random.getUniqueId())) {
+
+                        random.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, -5));
+                        random.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 127));
+
+                        random.teleport(game.getScatterLocation().get(random));
+
+                        playersToScatter.remove(random.getUniqueId());
+                        playersScattered.add(random.getUniqueId());
+                    }
+                } else {
+                    playersToScatter.remove(random.getUniqueId());
+                }
+
+                if (playersToScatter.size() == 0) {
                     Bukkit.getScheduler().cancelTask(taskID);
                     Bukkit.broadcastMessage(prefix + ChatColor.GREEN + "Finished scatter of all players!");
 
@@ -157,4 +172,11 @@ public class ScatterTask {
         Bukkit.getScheduler().cancelTask(taskID);
     }
 
+    public List<UUID> getPlayersToScatter() {
+        return playersToScatter;
+    }
+
+    public List<UUID> getPlayersScattered() {
+        return playersScattered;
+    }
 }

@@ -126,6 +126,8 @@ public class ConnectionListener implements Listener {
         }
          */
 
+        game.getScatterTask().getPlayersToScatter().remove(player.getUniqueId());
+
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(!game.getSpectators().contains(player)) {
                 game.getGameManager().spawnCombatVillager(player);
