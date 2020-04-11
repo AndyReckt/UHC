@@ -70,6 +70,11 @@ public class ConnectionListener implements Listener {
                 }
 
                 game.getGameManager().setPlayerState(player, PlayerState.SPECTATOR);
+
+                for (Player allSpectators : game.getSpectators()) {
+                    allSpectators.hidePlayer(player);
+                    player.hidePlayer(allSpectators);
+                }
             } else {
                 /*
                 if(game.getGameManager().isTeamGame()) {

@@ -110,6 +110,8 @@ public class Game extends JavaPlugin {
 
     private int relogTimeInMinutes;
 
+    private String gameHost;
+
     private ScatterTask scatterTask;
     private TimeTask timeTask;
     private ButcherTask butcherTask;
@@ -195,6 +197,8 @@ public class Game extends JavaPlugin {
         finalHealHappened = false;
         chatMuted = false;
         arenaEnabled = false;
+
+        gameHost = "None";
 
         teamSizeInString = "FFA";
 
@@ -301,6 +305,7 @@ public class Game extends JavaPlugin {
         getCommand("helpopunmute").setExecutor(new HelpopMuteCommand());
         getCommand("practice").setExecutor(new PracticeCommand());
         getCommand("forceenable").setExecutor(new ForceEnableCommand());
+        getCommand("host").setExecutor(new HostCommand());
 
         getCommand("worldeditor").setExecutor(new WorldEditorCommand());
         getCommand("configeditor").setExecutor(new ConfigEditorCommand());
@@ -398,6 +403,10 @@ public class Game extends JavaPlugin {
         config.addDefault("MYSQL.PASSWORD", "password");
         config.addDefault("MYSQL.PORT", 3306);
 
+        config.addDefault("CHAT.HOST-PREFIX", "&4&l[Host] ");
+        config.addDefault("CHAT.MOD-PREFIX", "&3&l[UHC-Mod] ");
+        config.addDefault("CHAT.SPECTATOR-PREFIX", "&7[Spectator] ");
+
         config.options().copyDefaults(true);
         saveConfig();
     }
@@ -418,6 +427,10 @@ public class Game extends JavaPlugin {
         } else {
             getConfig().set("MYSQL.ENABLED", true);
         }
+    }
+
+    public void setGameHost(String gameHost) {
+        this.gameHost = gameHost;
     }
 
     public void setTeamSizeInString(String teamSizeInString) {
@@ -650,6 +663,10 @@ public class Game extends JavaPlugin {
 
     public HashMap<Villager, UUID> getPlayerNameBoundToVillager() {
         return playerBoundToVillager;
+    }
+
+    public String getGameHost() {
+        return gameHost;
     }
 }
 

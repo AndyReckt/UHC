@@ -39,38 +39,85 @@ public class UHCBoardProvider implements BoardProvider {
         FileConfiguration config = game.getScoreboardManager().getConfig();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
-            for (String string : config.getStringList("SCOREBOARDS.LOBBY.LINES")) {
-                string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
-                        replace("%gameType%", game.getTeamSizeInString()).
-                        replace("%gameTime%", game.getTimeTask().getFormattedTime()).
-                        replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
-                        replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
-                        replace("%spectators%", "" + game.getSpectators().size()));
-                lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+            if(!game.getGameManager().isTeamGame()) {
+                for (String string : config.getStringList("SCOREBOARDS.SOLO.LOBBY.LINES")) {
+                    string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", "" + game.getSpectators().size())).
+                            replace("%gameHost%", game.getGameHost());
+                    lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+                }
+            } else {
+                for (String string : config.getStringList("SCOREBOARDS.TEAMS.LOBBY.LINES")) {
+                    string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", "" + game.getSpectators().size())).
+                            replace("%teamsAlive%", String.valueOf(game.getTeamManager().getTeams().size())).
+                            replace("%gameHost%", game.getGameHost());
+                    lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+                }
             }
         } else if(game.getGameStateManager().getCurrentGameState() instanceof ScatteringState) {
             lines.clear();
-            for (String string : config.getStringList("SCOREBOARDS.SCATTERING.LINES")) {
-                string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
-                        replace("%gameType%", game.getTeamSizeInString()).
-                        replace("%scattering%", String.valueOf(game.getScatterTask().getPlayersToScatter().size())).
-                        replace("%scattered%", String.valueOf(game.getScatterTask().getPlayersScattered().size())).
-                        replace("%gameTime%", game.getTimeTask().getFormattedTime()).
-                        replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
-                        replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
-                        replace("%spectators%", "" + game.getSpectators().size()));
-                lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+            if(!game.getGameManager().isTeamGame()) {
+                for (String string : config.getStringList("SCOREBOARDS.SOLO.SCATTERING.LINES")) {
+                    string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%scattering%", String.valueOf(game.getScatterTask().getPlayersToScatter().size())).
+                            replace("%scattered%", String.valueOf(game.getScatterTask().getPlayersScattered().size())).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", "" + game.getSpectators().size())).
+                            replace("%gameHost%", game.getGameHost());
+                    lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+                }
+            } else {
+                for (String string : config.getStringList("SCOREBOARDS.TEAMS.SCATTERING.LINES")) {
+                    string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%scattering%", String.valueOf(game.getScatterTask().getPlayersToScatter().size())).
+                            replace("%scattered%", String.valueOf(game.getScatterTask().getPlayersScattered().size())).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", "" + game.getSpectators().size())).
+                            replace("%gameHost%", game.getGameHost());
+                    lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+                }
             }
         } else {
             lines.clear();
-            for (String string : config.getStringList("SCOREBOARDS.INGAME.LINES")) {
-                string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
-                        replace("%gameType%", game.getTeamSizeInString()).
-                        replace("%gameTime%", game.getTimeTask().getFormattedTime()).
-                        replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
-                        replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
-                        replace("%spectators%", "" + game.getSpectators().size()));
-                lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+            if(!game.getGameManager().isTeamGame()) {
+                for (String string : config.getStringList("SCOREBOARDS.SOLO.INGAME.LINES")) {
+                    string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", "" + game.getSpectators().size())).
+                            replace("%gameHost%", game.getGameHost());
+                    lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+                }
+            } else {
+                for (String string : config.getStringList("SCOREBOARDS.TEAMS.INGAME.LINES")) {
+                    string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", "" + game.getSpectators().size())).
+                            replace("%teamsAlive%", String.valueOf(game.getTeamManager().getTeams().size())).
+                            replace("%teamKills%", String.valueOf(game.getTeamManager().getTeamKills(player))).
+                            replace("%gameHost%", game.getGameHost());
+                    lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
+                }
             }
         }
 

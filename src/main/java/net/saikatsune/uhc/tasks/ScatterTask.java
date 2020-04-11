@@ -31,6 +31,8 @@ public class ScatterTask {
     private List<UUID> playersToScatter = new ArrayList<>();
     private List<UUID> playersScattered = new ArrayList<>();
 
+    private List<UUID> queuedPlayers = new ArrayList<>();
+
     public void runTask() {
         game.setChatMuted(true);
 
@@ -40,17 +42,19 @@ public class ScatterTask {
 
         for (Player allPlayers : Bukkit.getOnlinePlayers()) {
             if(game.getPlayers().contains(allPlayers.getUniqueId())) {
-                Random randomLocation = new Random();
+                if(!game.getSpectators().contains(allPlayers)) {
+                    Random randomLocation = new Random();
 
-                int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
+                    int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
 
-                Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
+                    Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);
 
-                game.getGameManager().setScatterLocation(allPlayers, location);
+                    game.getGameManager().setScatterLocation(allPlayers, location);
 
-                playersToScatter.add(allPlayers.getUniqueId());
+                    playersToScatter.add(allPlayers.getUniqueId());
+                }
             }
         }
 
@@ -59,8 +63,6 @@ public class ScatterTask {
         taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(game, new BukkitRunnable() {
             @Override
             public void run() {
-                int playerNumber = new Random().nextInt(playersToScatter.size());
-                Player random = (Player) Bukkit.getOnlinePlayers().toArray()[playerNumber];
 
                 for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                     if(game.getSpectators().contains(allPlayers)) {
@@ -68,19 +70,30 @@ public class ScatterTask {
                     }
                 }
 
-                if(random.isOnline()) {
-                    if (playersToScatter.contains(random.getUniqueId())) {
-
-                        random.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, -5));
-                        random.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 127));
-
-                        random.teleport(game.getScatterLocation().get(random));
-
-                        playersToScatter.remove(random.getUniqueId());
-                        playersScattered.add(random.getUniqueId());
+                if(playersToScatter.size() >= 5) {
+                    for (int y = 0; y < 5; y++) {
+                        queuedPlayers.add(playersToScatter.get(y));
                     }
                 } else {
-                    playersToScatter.remove(random.getUniqueId());
+                    queuedPlayers.addAll(playersToScatter);
+                }
+
+                for (int i = 0; i < queuedPlayers.size(); i++) {
+                    Player toScatter = Bukkit.getPlayer(queuedPlayers.get(i));
+
+                    if(toScatter != null) {
+                        toScatter.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, Integer.MAX_VALUE, -5));
+                        toScatter.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 127));
+
+                        toScatter.teleport(game.getScatterLocation().get(toScatter));
+
+                        playersToScatter.remove(toScatter.getUniqueId());
+                        playersScattered.add(toScatter.getUniqueId());
+                    } else {
+                        playersToScatter.remove(playersToScatter.get(i));
+                    }
+
+                    queuedPlayers.clear();
                 }
 
                 if (playersToScatter.size() == 0) {
@@ -165,7 +178,7 @@ public class ScatterTask {
                     }.runTaskLater(game, 10 * 20);
                 }
             }
-        }, 0, 20);
+        }, 0, 10);
     }
 
     public void cancelTask() {

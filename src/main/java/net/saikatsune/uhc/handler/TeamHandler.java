@@ -16,6 +16,8 @@ public class TeamHandler {
 
     private int teamNumber;
 
+    private int kills = 0;
+
     private List<UUID> teamMembers = new ArrayList<>();
 
     private Inventory teamInventory = Bukkit.createInventory(null, 9*3, game.getmColor() + "Backpack");
@@ -43,4 +45,11 @@ public class TeamHandler {
         return teamInventory;
     }
 
+    public int getKills() {
+        return kills;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
 }

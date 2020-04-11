@@ -1,6 +1,7 @@
 package net.saikatsune.uhc.gamestate.states;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,7 +32,9 @@ public class IngameState extends GameState {
 
         game.getTimeTask().runTask();
 
-        Bukkit.broadcastMessage(prefix + ChatColor.YELLOW + "Remember: Sheep also drop leather.");
+        if(Scenarios.CUTCLEAN.isEnabled()) {
+            Bukkit.broadcastMessage(prefix + ChatColor.YELLOW + "Remember: Sheep also drop leather.");
+        }
 
         game.getButcherTask().run();
         game.getRelogTask().startTask();

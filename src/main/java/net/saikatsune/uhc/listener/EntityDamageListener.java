@@ -24,6 +24,7 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 
@@ -82,6 +83,12 @@ public class EntityDamageListener implements Listener {
 
                     game.getPlayerKills().put(player.getUniqueId(), game.getPlayerKills().get(player.getUniqueId()) + 1);
 
+                    if(game.getGameManager().isTeamGame()) {
+                        int teamKills = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId())).getKills();
+
+                        game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId())).setKills(teamKills + 1);
+                    }
+
                     Bukkit.broadcastMessage(ChatColor.RED + villager.getCustomName() + ChatColor.YELLOW + " was slain " +
                             "by " + ChatColor.RED + player.getName() + ChatColor.GRAY + "[" + game.getPlayerKills().get(player.getUniqueId())
                             + "].");
@@ -90,13 +97,9 @@ public class EntityDamageListener implements Listener {
                         //player.setLevel(player.getLevel() + game.getDeathLevels().get(villagerConnectedToPlayer.getUniqueId()));
 
                         try {
-                            for (ItemStack itemStack : game.getDeathInventory().get(dyingPlayer.getUniqueId())) {
-                                player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                            }
+                            Arrays.stream(game.getDeathInventory().get(dyingPlayer.getUniqueId())).forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
 
-                            for (ItemStack itemStack : game.getDeathArmor().get(dyingPlayer.getUniqueId())) {
-                                player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
-                            }
+                            Arrays.stream(game.getDeathArmor().get(dyingPlayer.getUniqueId())).forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
 
                             if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
                                 game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
@@ -276,6 +279,12 @@ public class EntityDamageListener implements Listener {
 
             if(player.getKiller() != null) {
                 game.getPlayerKills().put(player.getKiller().getUniqueId(), game.getPlayerKills().get(player.getKiller().getUniqueId()) + 1);
+
+                if(game.getGameManager().isTeamGame()) {
+                    int teamKills = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getKiller().getUniqueId())).getKills();
+
+                    game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getKiller().getUniqueId())).setKills(teamKills + 1);
+                }
 
                 if(game.isDatabaseActive()) {
                     game.getDatabaseManager().addKills(player.getKiller(), 1);

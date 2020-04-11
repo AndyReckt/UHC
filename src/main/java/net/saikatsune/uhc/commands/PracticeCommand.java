@@ -28,20 +28,24 @@ public class PracticeCommand implements CommandExecutor {
                 if(args.length != 1) {
                     if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
                         if(game.isArenaEnabled()) {
-                            if(!game.getArenaPlayers().contains(player.getUniqueId())) {
-                                game.getArenaPlayers().add(player.getUniqueId());
-                                player.getInventory().clear();
-                                game.getInventoryHandler().handlePracticeInventory(player);
-                                game.getGameManager().scatterPlayer(player, Bukkit.getWorld("uhc_practice"), 49);
-                                player.sendMessage(prefix + sColor + "You have joined the arena!");
+                            if(!game.getSpectators().contains(player)) {
+                                if(!game.getArenaPlayers().contains(player.getUniqueId())) {
+                                    game.getArenaPlayers().add(player.getUniqueId());
+                                    player.getInventory().clear();
+                                    game.getInventoryHandler().handlePracticeInventory(player);
+                                    game.getGameManager().scatterPlayer(player, Bukkit.getWorld("uhc_practice"), 49);
+                                    player.sendMessage(prefix + sColor + "You have joined the arena!");
+                                } else {
+                                    game.getArenaPlayers().remove(player.getUniqueId());
+                                    player.getInventory().clear();
+                                    player.getInventory().setArmorContents(null);
+                                    //Set lobby inventory
+                                    player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
+                                    player.setHealth(20);
+                                    player.sendMessage(prefix + sColor + "You have left the arena!");
+                                }
                             } else {
-                                game.getArenaPlayers().remove(player.getUniqueId());
-                                player.getInventory().clear();
-                                player.getInventory().setArmorContents(null);
-                                //Set lobby inventory
-                                player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
-                                player.setHealth(20);
-                                player.sendMessage(prefix + sColor + "You have left the arena!");
+                                player.sendMessage(prefix + ChatColor.RED + "You cannot go in arena while being in staff-mode.");
                             }
                         } else {
                             player.sendMessage(prefix + ChatColor.RED + "The arena is currently disabled!");

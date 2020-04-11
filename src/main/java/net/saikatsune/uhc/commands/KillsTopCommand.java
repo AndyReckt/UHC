@@ -39,7 +39,7 @@ public class KillsTopCommand implements CommandExecutor {
                     if(x != 11) {
                         UUID uuid = (UUID) object;
                         if(kills.get(uuid) != 0) {
-                            player.sendMessage(sColor + "- " + mColor + Bukkit.getOfflinePlayer(uuid).getName() + sColor + ": " + kills.get(uuid));
+                            player.sendMessage(sColor + "- " + mColor + Bukkit.getOfflinePlayer(uuid).getName() + sColor + ": " + kills.get(uuid) + " kill(s)");
                         }
                         x++;
                     } else {

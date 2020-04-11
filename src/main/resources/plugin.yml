@@ -49,6 +49,8 @@ commands:
     permission: uhc.host
   forceenable:
     permission: uhc.host
+  host:
+    permission: uhc.host
   health:
     aliases: [h]
   teamchat:

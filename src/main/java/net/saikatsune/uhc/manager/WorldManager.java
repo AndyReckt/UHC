@@ -285,7 +285,7 @@ public class WorldManager {
             game.getWorldManager().shrinkBorder("uhc_nether", 25);
         }
         game.getGameManager().playSound();
-        Bukkit.broadcastMessage(prefix + sColor + "The border has shrunken to " + mColor + game.getConfigManager().getBorderSize() + "x" +
+        Bukkit.broadcastMessage(prefix + sColor + "The border has shrunk to " + mColor + game.getConfigManager().getBorderSize() + "x" +
                 game.getConfigManager().getBorderSize() + sColor + " blocks!");
         if(game.getConfigManager().getBorderSize() > 25) {
             Bukkit.broadcastMessage(prefix + sColor + "The border is going to shrink to " + game.getTimeTask().getNextBorder() + "x" +

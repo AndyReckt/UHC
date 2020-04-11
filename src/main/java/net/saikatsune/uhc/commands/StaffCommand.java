@@ -26,24 +26,30 @@ public class StaffCommand implements CommandExecutor {
                     if(game.getPlayerState().get(player) != PlayerState.SPECTATOR) {
 
                         if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
-                            if(game.getGameManager().isTeamGame()) {
-                                if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
-                                    game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(player.getUniqueId()), player.getUniqueId());
-                                    game.getTeamNumber().put(player.getUniqueId(), -1);
+                            if(!game.getArenaPlayers().contains(player.getUniqueId())) {
+                                if(game.getGameManager().isTeamGame()) {
+                                    if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
+                                        game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(player.getUniqueId()), player.getUniqueId());
+                                        game.getTeamNumber().put(player.getUniqueId(), -1);
+                                    }
                                 }
+
+                                game.getGameManager().setPlayerState(player, PlayerState.SPECTATOR);
+                                game.getInventoryHandler().handleStaffInventory(player);
+
+                                game.getReceivePvpAlerts().add(player.getUniqueId());
+                                game.getReceiveDiamondAlerts().add(player.getUniqueId());
+                                game.getReceiveGoldAlerts().add(player.getUniqueId());
+                            } else {
+                                player.sendMessage(prefix + ChatColor.RED + "You cannot go into staff-mode when in arena.");
                             }
-
-                            game.getGameManager().setPlayerState(player, PlayerState.SPECTATOR);
-                            game.getInventoryHandler().handleStaffInventory(player);
-
-                            game.getReceivePvpAlerts().add(player.getUniqueId());
-                            game.getReceiveDiamondAlerts().add(player.getUniqueId());
-                            game.getReceiveGoldAlerts().add(player.getUniqueId());
                         } else {
                             player.damage(20);
                         }
 
-                        player.sendMessage(prefix + ChatColor.GREEN + "You are now in Staff-Mode!");
+                        if(!game.getArenaPlayers().contains(player.getUniqueId())) {
+                            player.sendMessage(prefix + ChatColor.GREEN + "You are now in Staff-Mode!");
+                        }
                     } else {
                         if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
                             game.getGameManager().setPlayerState(player, PlayerState.PLAYER);
