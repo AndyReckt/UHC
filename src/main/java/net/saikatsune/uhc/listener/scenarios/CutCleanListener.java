@@ -39,22 +39,9 @@ public class CutCleanListener implements Listener {
                         event.getBlock().setType(Material.AIR);
                         return;
                     }
-                    event.getBlock().setType(Material.AIR);
-                    if(!Scenarios.LIMITATIONS.isEnabled()) {
-                        if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
-                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
-                        } else if(Scenarios.DOUBLEORES.isEnabled()) {
-                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 2));
-                        } else {
-                            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 3));
-                        }
-                    } else {
-                        game.getLimitationsListener().getIronMined().putIfAbsent(player.getUniqueId(), 0);
-                        if(game.getLimitationsListener().getIronMined().get(player.getUniqueId()) >= 64) {
-                            event.getBlock().setType(Material.AIR);
-                            player.sendMessage(prefix + ChatColor.RED + "You can only mine 64 iron!");
-                            return;
-                        } else if(game.getLimitationsListener().getIronMined().get(player.getUniqueId()) < 64) {
+                    if(!Scenarios.VEINMINER.isEnabled()) {
+                        event.getBlock().setType(Material.AIR);
+                        if(!Scenarios.LIMITATIONS.isEnabled()) {
                             if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
                                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
                             } else if(Scenarios.DOUBLEORES.isEnabled()) {
@@ -62,49 +49,66 @@ public class CutCleanListener implements Listener {
                             } else {
                                 event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 3));
                             }
-                            game.getLimitationsListener().getIronMined().put(player.getUniqueId(), game.getLimitationsListener().getIronMined().get(player.getUniqueId()) + 1);
+                        } else {
+                            game.getLimitationsListener().getIronMined().putIfAbsent(player.getUniqueId(), 0);
+                            if(game.getLimitationsListener().getIronMined().get(player.getUniqueId()) >= 64) {
+                                event.getBlock().setType(Material.AIR);
+                                player.sendMessage(prefix + ChatColor.RED + "You can only mine 64 iron!");
+                                return;
+                            } else if(game.getLimitationsListener().getIronMined().get(player.getUniqueId()) < 64) {
+                                if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
+                                } else if(Scenarios.DOUBLEORES.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 2));
+                                } else {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 3));
+                                }
+                                game.getLimitationsListener().getIronMined().put(player.getUniqueId(), game.getLimitationsListener().getIronMined().get(player.getUniqueId()) + 1);
+                            }
                         }
+                        event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(2);
                     }
-                    event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(2);
                     break;
                 case GOLD_ORE:
                     if ((player.getItemInHand().getType() != Material.DIAMOND_PICKAXE) && (player.getItemInHand().getType() != Material.IRON_PICKAXE)) {
                         event.getBlock().setType(Material.AIR);
                         return;
                     }
-                    event.getBlock().setType(Material.AIR);
-                    if(!Scenarios.LIMITATIONS.isEnabled()) {
-                        if(!Scenarios.BAREBONES.isEnabled()) {
-                            if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
-                            } else if(Scenarios.DOUBLEORES.isEnabled()) {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
+                    if(!Scenarios.VEINMINER.isEnabled()) {
+                        event.getBlock().setType(Material.AIR);
+                        if(!Scenarios.LIMITATIONS.isEnabled()) {
+                            if(!Scenarios.BAREBONES.isEnabled()) {
+                                if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
+                                } else if(Scenarios.DOUBLEORES.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
+                                } else {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                                }
                             } else {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                                event.getBlock().setType(Material.AIR);
+                                player.sendMessage(prefix + ChatColor.RED + "You can only mine iron!");
+                                return;
                             }
                         } else {
-                            event.getBlock().setType(Material.AIR);
-                            player.sendMessage(prefix + ChatColor.RED + "You can only mine iron!");
-                            return;
-                        }
-                    } else {
-                        game.getLimitationsListener().getGoldMined().putIfAbsent(player.getUniqueId(), 0);
-                        if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) >= 32) {
-                            event.getBlock().setType(Material.AIR);
-                            player.sendMessage(prefix + ChatColor.RED + "You can only mine 32 gold!");
-                            return;
-                        } else if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) < 32) {
-                            if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
-                            } else if(Scenarios.DOUBLEORES.isEnabled()) {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
-                            } else {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                            game.getLimitationsListener().getGoldMined().putIfAbsent(player.getUniqueId(), 0);
+                            if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) >= 32) {
+                                event.getBlock().setType(Material.AIR);
+                                player.sendMessage(prefix + ChatColor.RED + "You can only mine 32 gold!");
+                                return;
+                            } else if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) < 32) {
+                                if((!Scenarios.DOUBLEORES.isEnabled()) && !Scenarios.TRIPLEORES.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
+                                } else if(Scenarios.DOUBLEORES.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
+                                } else {
+                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                                }
+                                game.getLimitationsListener().getGoldMined().put(player.getUniqueId(), game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) + 1);
                             }
-                            game.getLimitationsListener().getGoldMined().put(player.getUniqueId(), game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) + 1);
                         }
+                        event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(4);
                     }
-                    event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(4);
                     break;
             }
         }

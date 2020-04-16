@@ -29,18 +29,22 @@ public class SwitcherooListener implements Listener {
 
                 if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
                     if(!game.isInGrace()) {
-                        Player shooter = (Player) arrow.getShooter();
-                        Player shot = (Player) event.getEntity();
+                        if(event.getEntity() instanceof Player) {
+                            if(event.getDamager() instanceof Player) {
+                                Player shooter = (Player) arrow.getShooter();
+                                Player shot = (Player) event.getEntity();
 
-                        if(Scenarios.SWITCHEROO.isEnabled()) {
-                            newLocation.put(shooter, shot.getLocation());
-                            newLocation.put(shot, shooter.getLocation());
+                                if(Scenarios.SWITCHEROO.isEnabled()) {
+                                    newLocation.put(shooter, shot.getLocation());
+                                    newLocation.put(shot, shooter.getLocation());
 
-                            shooter.teleport(newLocation.get(shooter));
-                            shooter.sendMessage(prefix + ChatColor.YELLOW + "You have switched places with " + shot.getName() + ".");
+                                    shooter.teleport(newLocation.get(shooter));
+                                    shooter.sendMessage(prefix + ChatColor.YELLOW + "You have switched places with " + shot.getName() + ".");
 
-                            shot.teleport(newLocation.get(shot));
-                            shot.sendMessage(prefix + ChatColor.YELLOW + "You have switched places with " + shooter.getName() + ".");
+                                    shot.teleport(newLocation.get(shot));
+                                    shot.sendMessage(prefix + ChatColor.YELLOW + "You have switched places with " + shooter.getName() + ".");
+                                }
+                            }
                         }
                     }
                 }

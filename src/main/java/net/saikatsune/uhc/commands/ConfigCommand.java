@@ -1,6 +1,7 @@
 package net.saikatsune.uhc.commands;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.enums.Scenarios;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,7 +31,11 @@ public class ConfigCommand implements CommandExecutor {
             player.sendMessage(sColor + "Strength II: " + mColor + game.getConfigManager().isStrength2());
             player.sendMessage(sColor + "Enderpearl Damage: " + mColor + game.getConfigManager().isEnderpearlDamage());
             player.sendMessage(sColor + "God Apples: " + mColor + "false");
-            player.sendMessage(sColor + "Horses: " + mColor + "true");
+            if(Scenarios.HORSELESS.isEnabled()) {
+                player.sendMessage(sColor + "Horses: " + mColor + "false");
+            } else {
+                player.sendMessage(sColor + "Horses: " + mColor + "true");
+            }
             player.sendMessage(sColor + "Horse Healing: " + mColor + "true");
             player.sendMessage(sColor + "Apple Rate: " + mColor + game.getConfigManager().getAppleRate() + "%");
             player.sendMessage(sColor + "Flint Rate: " + mColor + game.getConfigManager().getFlintRate() + "%");

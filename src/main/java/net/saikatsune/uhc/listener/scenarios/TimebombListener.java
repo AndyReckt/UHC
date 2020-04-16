@@ -28,7 +28,6 @@ public class TimebombListener implements Listener {
 
     @EventHandler
     public void handlePlayerDeathEvent(PlayerDeathEvent event) {
-
         Player player = event.getEntity();
         Location location = player.getLocation();
         Inventory inventory = player.getInventory();
@@ -88,7 +87,7 @@ public class TimebombListener implements Listener {
                     public void run() {
                         location.getWorld().createExplosion(location, 6.0F);
                         location.getWorld().strikeLightning(location);
-                        Bukkit.broadcastMessage(prefix + mColor + "[TimeBomb] " + player.getName() + "'s " + sColor + "corpse has exploded!");
+                        Bukkit.broadcastMessage(prefix + mColor + "[TimeBomb] " + player.getName() + "'s " + sColor + "corpse has exploded.");
                     }
                 }.runTaskLater(game, 30 * 20);
             }

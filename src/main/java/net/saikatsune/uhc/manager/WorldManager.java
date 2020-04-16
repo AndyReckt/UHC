@@ -30,8 +30,6 @@ public class WorldManager {
         world.setTime(0);
         world.setThundering(false);
         world.setGameRuleValue("naturalRegeneration", "false");
-        world.setGameRuleValue("doMobSpawning", "false");
-        world.setGameRuleValue("doDaylightCycle", "false");
         Bukkit.broadcastMessage(prefix + sColor + "Finished creating the world " + mColor + worldName + sColor + "!");
     }
 

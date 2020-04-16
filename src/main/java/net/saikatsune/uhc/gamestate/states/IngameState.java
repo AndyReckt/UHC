@@ -22,7 +22,7 @@ public class IngameState extends GameState {
 
         game.getGameManager().playSound();
 
-        game.setChatMuted(false);
+        game.setChatMuted(true);
 
         for (Player allPlayers : Bukkit.getOnlinePlayers()) {
             if(game.getPlayers().contains(allPlayers.getUniqueId())) {
@@ -38,6 +38,24 @@ public class IngameState extends GameState {
 
         game.getButcherTask().run();
         game.getRelogTask().startTask();
+
+        Bukkit.getWorld("uhc_world").setTime(0);
+
+        game.getGameManager().setWhitelisted(false);
+
+        if(Scenarios.BESTPVE.isEnabled()) {
+            game.getGameManager().startBestPveTimer();
+
+            for (UUID allPlayers : game.getPlayers()) {
+                game.getBestPvePlayers().add(allPlayers);
+
+                if(allPlayers != null) {
+                    Player allOnlinePlayers = Bukkit.getPlayer(allPlayers);
+
+                    allOnlinePlayers.sendMessage(prefix + ChatColor.GREEN + "You have been added to the BestPVE list.");
+                }
+            }
+        }
     }
 
     public void stop() {

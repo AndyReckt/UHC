@@ -98,8 +98,12 @@ public class TeamManager {
 
     public Integer getTeamKills(Player player) {
         if(game.getGameManager().isTeamGame()) {
-            if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
-                return game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId())).getKills();
+            if(teams.containsKey(game.getTeamNumber().get(player.getUniqueId()))) {
+                if(game.getTeamNumber().get(player.getUniqueId()) != -1) {
+                    return game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId())).getKills();
+                } else {
+                    return game.getPlayerKills().get(player.getUniqueId());
+                }
             } else {
                 return game.getPlayerKills().get(player.getUniqueId());
             }

@@ -2,6 +2,7 @@ package net.saikatsune.uhc.commands;
 
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.PlayerState;
+import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.states.IngameState;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,6 +51,11 @@ public class RespawnCommand implements CommandExecutor {
                                         } else {
                                             game.getTeamManager().createTeam(target.getUniqueId());
                                         }
+                                    }
+
+                                    if(Scenarios.BESTPVE.isEnabled()) {
+                                        game.getBestPvePlayers().add(player.getUniqueId());
+                                        player.sendMessage(prefix + ChatColor.GREEN + "You have been added to the BestPVE list.");
                                     }
 
                                     game.getLogoutTimer().putIfAbsent(player.getUniqueId(), game.getRelogTimeInMinutes() * 60);

@@ -85,7 +85,7 @@ public class GlassBorderSupport implements Listener {
             return false;
         }
 
-        List<Location> toUpdate = new ArrayList<Location>();
+        List<Location> toUpdate = new ArrayList<>();
 
         if (updateX) {
             for (int y = -3; y < 7; y++) {

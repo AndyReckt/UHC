@@ -78,7 +78,6 @@ public class EntityDamageListener implements Listener {
 
                 if(villager.getCustomName().contains("[CombatLogger] ")) {
                     Player player = event.getEntity().getKiller();
-
                     OfflinePlayer dyingPlayer = Bukkit.getOfflinePlayer(game.getPlayerNameBoundToVillager().get(villager));
 
                     game.getPlayerKills().put(player.getUniqueId(), game.getPlayerKills().get(player.getUniqueId()) + 1);
@@ -97,9 +96,7 @@ public class EntityDamageListener implements Listener {
                         //player.setLevel(player.getLevel() + game.getDeathLevels().get(villagerConnectedToPlayer.getUniqueId()));
 
                         try {
-                            Arrays.stream(game.getDeathInventory().get(dyingPlayer.getUniqueId())).forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
-
-                            Arrays.stream(game.getDeathArmor().get(dyingPlayer.getUniqueId())).forEach(itemStack -> player.getWorld().dropItemNaturally(player.getLocation(), itemStack));
+                            game.getGameManager().dropPlayerDeathInventory(dyingPlayer.getUniqueId(), player);
 
                             if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
                                 game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
@@ -141,9 +138,7 @@ public class EntityDamageListener implements Listener {
                         game.getCombatVillagerUUID().remove(villagerKey);
 
                         if(game.getGameManager().isTeamGame()) {
-                            if(game.getTeamNumber().get(dyingPlayer.getUniqueId()) != -1) {
-                                game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(dyingPlayer.getUniqueId()), dyingPlayer.getUniqueId());
-                            }
+                            game.getGameManager().removeDeadTeams();
                         }
 
                         /*
@@ -218,11 +213,17 @@ public class EntityDamageListener implements Listener {
                     }
                 }
             } else {
+                if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
+                    event.setCancelled(true);
+                }
+
+                /*
                 if(game.isInGrace()) {
                     if(!game.getArenaPlayers().contains(player.getUniqueId())) {
                         event.setCancelled(true);
                     }
                 }
+                 */
             }
         } else {
             if(event.getDamager() instanceof Player || event.getDamager() instanceof Projectile) {

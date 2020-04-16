@@ -1,8 +1,15 @@
 package net.saikatsune.uhc.tasks;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.handler.TeamHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.UUID;
 
 @SuppressWarnings("deprecation")
 public class TimeTask {
@@ -55,6 +62,11 @@ public class TimeTask {
                     uptimeSeconds = 0;
                     uptimeMinutes += 1;
                     borderMinutes += 1;
+
+                    if(game.getGameManager().isTeamGame()) {
+                        game.getGameManager().removeDeadTeams();
+                    }
+
                     if (uptimeMinutes == 60) {
                         uptimeMinutes = 0;
                         uptimeHours += 1;
@@ -63,6 +75,11 @@ public class TimeTask {
 
                 if (uptimeMinutes == game.getConfigManager().getFinalHeal()) {
                     if (uptimeSeconds == 0) {
+                        if(game.isChatMuted()) {
+                            game.setChatMuted(false);
+                            Bukkit.broadcastMessage(prefix + mColor + "Global Chat " + sColor + "has been " + ChatColor.GREEN + "enabled" + sColor + ".");
+                        }
+
                         if(!game.isFinalHealHappened()) {
                             game.getGameManager().executeFinalHeal();
                             game.setFinalHealHappened(true);
@@ -82,6 +99,13 @@ public class TimeTask {
                     if (uptimeSeconds == 0) {
                         Bukkit.broadcastMessage(prefix + sColor + "The border is going to shrink by 500 blocks every 5 minutes now!");
                         game.getGameManager().playSound();
+
+                        World uhcWorld = Bukkit.getWorld("uhc_world");
+
+                        uhcWorld.setTime(0);
+                        uhcWorld.setGameRuleValue("doDaylightCycle", "false");
+
+                        Bukkit.broadcastMessage(prefix + sColor + "Permanent day is now active.");
                     }
                 }
 

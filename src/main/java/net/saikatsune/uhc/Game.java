@@ -119,6 +119,8 @@ public class Game extends JavaPlugin {
 
     private LimitationsListener limitationsListener;
 
+    private List<UUID> bestPvePlayers;
+
     @Override
     public void onEnable() {
         this.createConfigFile();
@@ -197,6 +199,8 @@ public class Game extends JavaPlugin {
         finalHealHappened = false;
         chatMuted = false;
         arenaEnabled = false;
+
+        bestPvePlayers = new ArrayList<>();
 
         gameHost = "None";
 
@@ -358,6 +362,12 @@ public class Game extends JavaPlugin {
         pluginManager.registerEvents(new FlowerPowerListener(), this);
         pluginManager.registerEvents(new BleedingSweetsListener(), this);
         pluginManager.registerEvents(new SwitcherooListener(), this);
+        pluginManager.registerEvents(new HorselessListener(), this);
+        pluginManager.registerEvents(new AbsorptionlessListener(), this);
+        pluginManager.registerEvents(new BetaZombiesListener(), this);
+        pluginManager.registerEvents(new VeinMinerListener(), this);
+        pluginManager.registerEvents(new BestPVEListener(), this);
+        pluginManager.registerEvents(new SwordlessListener(), this);
 
         pluginManager.registerEvents(new WebCageListener(), this);
         pluginManager.registerEvents(new NoCleanListener(), this);
@@ -406,6 +416,7 @@ public class Game extends JavaPlugin {
         config.addDefault("CHAT.HOST-PREFIX", "&4&l[Host] ");
         config.addDefault("CHAT.MOD-PREFIX", "&3&l[UHC-Mod] ");
         config.addDefault("CHAT.SPECTATOR-PREFIX", "&7[Spectator] ");
+        config.addDefault("CHAT.TEAM-PREFIX", "&7[&aTeam %teamNumber%&7] ");
 
         config.options().copyDefaults(true);
         saveConfig();
@@ -667,6 +678,10 @@ public class Game extends JavaPlugin {
 
     public String getGameHost() {
         return gameHost;
+    }
+
+    public List<UUID> getBestPvePlayers() {
+        return bestPvePlayers;
     }
 }
 

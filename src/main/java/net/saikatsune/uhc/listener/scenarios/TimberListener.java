@@ -13,14 +13,14 @@ import org.bukkit.inventory.ItemStack;
 
 public class TimberListener implements Listener {
 
-    private Game aurityUHC = Game.getInstance();
+    private Game game = Game.getInstance();
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {
 
         Player player = event.getPlayer();
 
-        if(aurityUHC.getSpectators().contains(player)) event.setCancelled(true);
+        if(game.getSpectators().contains(player)) event.setCancelled(true);
 
         if(Scenarios.TIMBER.isEnabled()) {
             if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {

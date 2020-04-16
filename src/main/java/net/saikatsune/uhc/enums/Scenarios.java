@@ -1,15 +1,18 @@
 package net.saikatsune.uhc.enums;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.gamestate.states.IngameState;
 import net.saikatsune.uhc.handler.ItemHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public enum Scenarios {
 
@@ -39,7 +42,13 @@ public enum Scenarios {
     FIRELESS(false, new ItemHandler(Material.FIRE).setDisplayName("§bFireless").build(), new String[]{"You take no fire damage."}),
     OREFRENZY(false, new ItemHandler(Material.NETHER_STAR).setDisplayName("§bOreFrenzy").build(), new String[]{"Mining lapis ore will get you a splash potion of healing.", "Mining emeralds will get you 32 arrows.", "Mining redstone ore will get you a book.", "Mining diamond ore will get you a diamond 4 xp bottles.", "Mining quartz will get you a block of TNT."}),
     BLEEDINGSWEETS(false, new ItemHandler(Material.DIAMOND).setDisplayName("§bBleedingSweets").build(), new String[]{"When a player dies, they will drop ", "1 diamond, 5 gold ingots, 16 arrows and 1 string."}),
-    SWITCHEROO(false, new ItemHandler(Material.ENDER_PEARL).setDisplayName("§bSwitcheroo").build(), new String[]{"When you shoot someone, you trade places with them."});
+    SWITCHEROO(false, new ItemHandler(Material.ENDER_PEARL).setDisplayName("§bSwitcheroo").build(), new String[]{"When you shoot someone, you trade places with them."}),
+    HORSELESS(false, new ItemHandler(Material.SADDLE).setDisplayName("§bHorseless").build(), new String[]{"You cannot ride horses."}),
+    BESTPVE(false, new ItemHandler(Material.WATCH).setDisplayName("§bBestPVE").build(), new String[]{"You're part of a BestPVE list, if you take damage", "you're removed from it and to be added back", "you need to kill a player. If you're part of", "the list, you'll gain an extra heart."}),
+    ABSORPTIONLESS(false, new ItemHandler(Material.GLOWSTONE_DUST).setDisplayName("§bAbsorptionless").build(), new String[]{"You do not receive absorption", "hearts after eating a", "golden apple."}),
+    VEINMINER(false, new ItemHandler(Material.IRON_PICKAXE).setDisplayName("§bVeinMiner").build(), new String[]{"Mine all blocks in a vein, ", "when sneaking."}),
+    BETAZOMBIES(false, new ItemHandler(Material.ROTTEN_FLESH).setDisplayName("§bBetaZombies").build(), new String[]{"Zombies drop feathers."}),
+    SWORDLESS(false, new ItemHandler(Material.WOOD_SWORD).setDisplayName("§bSwordless").build(), new String[]{"You cannot craft/use swords."});
 
     private Game game = Game.getInstance();
 
@@ -61,14 +70,40 @@ public enum Scenarios {
         this.enabled = enabled;
 
         if(enabled) {
-            Bukkit.broadcastMessage(prefix + mColor + scenarioItem.getItemMeta().getDisplayName() + sColor + " has been " + ChatColor.GREEN + "enabled" + sColor + "!");
+            Bukkit.broadcastMessage(prefix + mColor + scenarioItem.getItemMeta().getDisplayName() + sColor + " has been " + ChatColor.GREEN + "enabled" + sColor + ".");
+
+            if(scenarioItem.getItemMeta().getDisplayName().contains("BestPVE")) {
+                if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
+                    if(Scenarios.BESTPVE.isEnabled()) {
+                        game.getGameManager().startBestPveTimer();
+
+                        for (UUID allPlayers : game.getPlayers()) {
+                            game.getBestPvePlayers().add(allPlayers);
+
+                            if(allPlayers != null) {
+                                Player allOnlinePlayers = Bukkit.getPlayer(allPlayers);
+
+                                allOnlinePlayers.sendMessage(prefix + ChatColor.GREEN + "You have been added to the BestPVE list.");
+                            }
+                        }
+                    }
+                }
+            }
         } else {
-            Bukkit.broadcastMessage(prefix + mColor + scenarioItem.getItemMeta().getDisplayName() + sColor + " has been " + ChatColor.RED + "disabled" + sColor + "!");
+            Bukkit.broadcastMessage(prefix + mColor + scenarioItem.getItemMeta().getDisplayName() + sColor + " has been " + ChatColor.RED + "disabled" + sColor + ".");
+
+            if(scenarioItem.getItemMeta().getDisplayName().contains("BestPVE")) {
+                if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
+                    for (UUID allPlayers : game.getPlayers()) {
+                        game.getBestPvePlayers().remove(allPlayers);
+                    }
+                }
+            }
         }
     }
 
     public static Inventory getExplanations() {
-        Inventory inventory = Bukkit.createInventory(null, 9*3,  "Scenarios Explained");
+        Inventory inventory = Bukkit.createInventory(null, 9*4,  "Scenarios Explained");
 
         inventory.clear();
 
@@ -86,7 +121,7 @@ public enum Scenarios {
     }
 
     public static Inventory toToggle() {
-        Inventory inventory = Bukkit.createInventory(null, 9*3,  "Scenarios Editor");
+        Inventory inventory = Bukkit.createInventory(null, 9*4,  "Scenarios Editor");
 
         inventory.clear();
 

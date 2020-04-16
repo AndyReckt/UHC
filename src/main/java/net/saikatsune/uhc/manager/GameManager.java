@@ -2,10 +2,13 @@ package net.saikatsune.uhc.manager;
 
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.PlayerState;
+import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.GameState;
 import net.saikatsune.uhc.gamestate.states.IngameState;
+import net.saikatsune.uhc.handler.TeamHandler;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -32,6 +35,7 @@ public class GameManager {
         player.setLevel(0);
         player.setTotalExperience(0);
         player.setExp(0);
+        player.setMaxHealth(20);
     }
 
     public void setPlayerState(Player player, PlayerState playerState) {
@@ -84,10 +88,82 @@ public class GameManager {
                     player.sendMessage(prefix + ChatColor.YELLOW + "You are now spectating the game.");
 
                     if(!game.getDeadPlayersByUUID().contains(player.getUniqueId())) {
-                        player.sendMessage(prefix + ChatColor.YELLOW + "Late-scatter yourself with /latescatter.");
+                        if(game.isInGrace()) {
+                            player.sendMessage(prefix + ChatColor.YELLOW + "Late-scatter yourself with /latescatter.");
+                        }
                     } else {
                         player.sendMessage(prefix + ChatColor.RED + "You have already died this game.");
                     }
+                }
+            }
+        }
+    }
+
+    public void startBestPveTimer() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(Scenarios.BESTPVE.isEnabled()) {
+                            for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+                                if(game.getBestPvePlayers().contains(allPlayers.getUniqueId())) {
+                                    allPlayers.setMaxHealth(allPlayers.getMaxHealth() + 2);
+
+                                    allPlayers.setHealth(allPlayers.getHealth() + 2);
+                                }
+                            }
+                        } else {
+                            cancel();
+                        }
+                    }
+                }.runTaskTimer(game, 0, 20 * 60 * 10);
+            }
+        }.runTaskLater(game, 20 * 60 * 10);
+    }
+
+    public void dropPlayerDeathInventory(UUID playerByUUID) {
+        ItemStack[] inventoryStack = game.getDeathInventory().get(playerByUUID);
+        ItemStack[] armorStack = game.getDeathArmor().get(playerByUUID);
+
+        for (ItemStack itemStack : inventoryStack) {
+            if(itemStack != null) {
+                game.getDeathLocation().get(playerByUUID).getWorld().dropItemNaturally(
+                  game.getDeathLocation().get(playerByUUID), itemStack
+                );
+            }
+        }
+
+        for (ItemStack itemStack : armorStack) {
+            if(itemStack != null) {
+                if(itemStack.getType() != Material.AIR) {
+                    game.getDeathLocation().get(playerByUUID).getWorld().dropItemNaturally(
+                            game.getDeathLocation().get(playerByUUID), itemStack
+                    );
+                }
+            }
+        }
+    }
+
+    public void dropPlayerDeathInventory(UUID playerByUUID, Player player) {
+        ItemStack[] inventoryStack = game.getDeathInventory().get(playerByUUID);
+        ItemStack[] armorStack = game.getDeathArmor().get(playerByUUID);
+
+        for (ItemStack itemStack : inventoryStack) {
+            if(itemStack != null) {
+                game.getDeathLocation().get(playerByUUID).getWorld().dropItemNaturally(
+                        player.getLocation(), itemStack
+                );
+            }
+        }
+
+        for (ItemStack itemStack : armorStack) {
+            if(itemStack != null) {
+                if(itemStack.getType() != Material.AIR) {
+                    game.getDeathLocation().get(playerByUUID).getWorld().dropItemNaturally(
+                            player.getLocation(), itemStack
+                    );
                 }
             }
         }
@@ -127,6 +203,31 @@ public class GameManager {
             if(entity instanceof Villager) {
                 if(entity.getUniqueId().equals(villagerUUID)) {
                     entity.remove();
+                }
+            }
+        }
+    }
+
+    //Temporary fix
+    public void removeDeadTeams() {
+        for (TeamHandler teamHandler : game.getTeamManager().getTeams().values()) {
+            if(teamHandler.getTeamMembers().size() == 0) {
+                game.getTeamManager().getTeams().remove(teamHandler.getTeamNumber());
+
+                game.getGameManager().checkWinner();
+            } else {
+                for (int i = 0; i < teamHandler.getTeamMembers().size(); i++) {
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(teamHandler.getTeamMembers().get(i));
+
+                    if(!game.getPlayers().contains(offlinePlayer.getUniqueId())) {
+                        teamHandler.getTeamMembers().remove(offlinePlayer.getUniqueId());
+
+                        if(teamHandler.getTeamMembers().size() == 0) {
+                            game.getTeamManager().getTeams().remove(teamHandler.getTeamNumber());
+
+                            game.getGameManager().checkWinner();
+                        }
+                    }
                 }
             }
         }

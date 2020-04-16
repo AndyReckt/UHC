@@ -36,15 +36,7 @@ public class RelogTask {
                                     "was disconnected for too long and has been disqualified.");
 
                             try {
-                                for (ItemStack itemStack : game.getDeathInventory().get(offlinePlayer.getUniqueId())) {
-                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
-                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), itemStack);
-                                }
-
-                                for (ItemStack itemStack : game.getDeathArmor().get(offlinePlayer.getUniqueId())) {
-                                    game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
-                                            game.getDeathLocation().get(offlinePlayer.getUniqueId()), itemStack);
-                                }
+                                game.getGameManager().dropPlayerDeathInventory(offlinePlayer.getUniqueId());
 
                                 if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
@@ -82,9 +74,7 @@ public class RelogTask {
                             }
 
                             if(game.getGameManager().isTeamGame()) {
-                                if(game.getTeamNumber().get(offlinePlayer.getUniqueId()) != -1) {
-                                    game.getTeamManager().removePlayerFromTeam(game.getTeamNumber().get(offlinePlayer.getUniqueId()), offlinePlayer.getUniqueId());
-                                }
+                                game.getGameManager().removeDeadTeams();
                             }
 
                             game.getGameManager().checkWinner();
