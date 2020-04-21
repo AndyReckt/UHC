@@ -12,6 +12,7 @@ import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
 
+@SuppressWarnings("deprecation")
 public class WorldManager {
 
     private Game game = Game.getInstance();

@@ -45,8 +45,15 @@ public class ScatterTask {
                 if(!game.getSpectators().contains(allPlayers)) {
                     Random randomLocation = new Random();
 
-                    int x = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                    int z = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int xPositive = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int xNegative = -game.getConfigManager().getBorderSize() - 1 + (int) (Math.random() * ((-(-game.getConfigManager().getBorderSize() - 1)) + 1));
+                    int x = (Math.random() <= 0.5) ? xPositive : xNegative;
+
+
+                    int zPositive = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int zNegative = -game.getConfigManager().getBorderSize() - 1 + (int) (Math.random() * ((-(-game.getConfigManager().getBorderSize() - 1)) + 1));
+                    int z = (Math.random() <= 0.5) ? zPositive : zNegative;
+
                     int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
 
                     Location location = new Location(Bukkit.getWorld("uhc_world"), x, y ,z);

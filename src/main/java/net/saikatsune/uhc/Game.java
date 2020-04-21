@@ -240,6 +240,11 @@ public class Game extends JavaPlugin {
         worldManager.createWorld("uhc_nether", World.Environment.NETHER, WorldType.NORMAL);
         worldManager.createWorld("uhc_practice", World.Environment.NORMAL, WorldType.FLAT);
 
+        World practiceWorld = Bukkit.getWorld("uhc_practice");
+
+        practiceWorld.setGameRuleValue("doMobSpawning", "false");
+        practiceWorld.setDifficulty(Difficulty.PEACEFUL);
+
         worldManager.createBorderLayer("uhc_practice", 50, 4, null);
 
         new BukkitRunnable() {

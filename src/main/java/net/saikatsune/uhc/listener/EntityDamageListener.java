@@ -214,7 +214,9 @@ public class EntityDamageListener implements Listener {
                 }
             } else {
                 if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
-                    event.setCancelled(true);
+                    if(!game.getArenaPlayers().contains(player.getUniqueId())) {
+                        event.setCancelled(true);
+                    }
                 }
 
                 /*
@@ -362,6 +364,7 @@ public class EntityDamageListener implements Listener {
         }
     }
 
+    /*
     @EventHandler
     public void handleProjectileHitEvent(ProjectileHitEvent event) {
         if(event.getEntity() instanceof Player) {
@@ -374,6 +377,7 @@ public class EntityDamageListener implements Listener {
             }
         }
     }
+     */
 
 
 
