@@ -26,7 +26,7 @@ public class LimitationsListener implements Listener {
     public void handleBlockBreakEvent(BlockBreakEvent event) {
         Player player = event.getPlayer();
 
-        if(Scenarios.LIMITATIONS.isEnabled()) {
+        if(Scenarios.Limitations.isEnabled()) {
             diamondsMined.putIfAbsent(player.getUniqueId(), 0);
             goldMined.putIfAbsent(player.getUniqueId(), 0);
             ironMined.putIfAbsent(player.getUniqueId(), 0);

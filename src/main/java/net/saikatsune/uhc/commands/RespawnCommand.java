@@ -53,7 +53,7 @@ public class RespawnCommand implements CommandExecutor {
                                         }
                                     }
 
-                                    if(Scenarios.BESTPVE.isEnabled()) {
+                                    if(Scenarios.BestPVE.isEnabled()) {
                                         game.getBestPvePlayers().add(player.getUniqueId());
                                         player.sendMessage(prefix + ChatColor.GREEN + "You have been added to the BestPVE list.");
                                     }

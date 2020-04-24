@@ -38,7 +38,7 @@ public class PlayerDecayListener implements Listener {
         if ((random.nextDouble() <= 0.5 * 0.01D) && (block.getType() ==
                 Material.LEAVES || (random.nextDouble() <= 0.5 * 0.01D) && block.getType() == Material.LEAVES_2)) {
 
-            if(Scenarios.LUCKYLEAVES.isEnabled()) {
+            if(Scenarios.LuckyLeaves.isEnabled()) {
                 block.setType(Material.AIR);
                 block.getWorld().dropItemNaturally(location, new ItemStack(Material.GOLDEN_APPLE, 1));
             }

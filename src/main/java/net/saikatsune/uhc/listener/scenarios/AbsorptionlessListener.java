@@ -22,7 +22,7 @@ public class AbsorptionlessListener implements Listener {
         if ((event.getItem().getType() != null) &&
                 (event.getItem().getType() == Material.GOLDEN_APPLE)) {
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.ABSORPTIONLESS.isEnabled()) {
+                if(Scenarios.Absorptionless.isEnabled()) {
                     new BukkitRunnable() {
                         @Override
                         public void run() {

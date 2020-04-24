@@ -11,7 +11,7 @@ public class SoupListener implements Listener {
 
     @EventHandler
     public void handlePlayerInteractEvent(PlayerInteractEvent event) {
-        if(Scenarios.SOUP.isEnabled()) {
+        if(Scenarios.Soup.isEnabled()) {
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (event.getItem() != null && event.getItem().getType() == Material.MUSHROOM_SOUP) {
                     if(event.getPlayer().getHealth() < event.getPlayer().getMaxHealth()) {

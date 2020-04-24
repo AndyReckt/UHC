@@ -19,7 +19,7 @@ public class BleedingSweetsListener implements Listener {
         Player dyingPlayer = event.getEntity();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
+            if(Scenarios.BleedingSweets.isEnabled()) {
                 dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.DIAMOND));
                 dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.GOLD_INGOT, 5));
                 dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.ARROW, 16));

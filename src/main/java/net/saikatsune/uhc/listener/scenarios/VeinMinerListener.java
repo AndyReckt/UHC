@@ -6,7 +6,6 @@ import net.saikatsune.uhc.gamestate.states.IngameState;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +25,7 @@ public class VeinMinerListener implements Listener {
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(player.isSneaking()) {
-                if(Scenarios.VEINMINER.isEnabled()) {
+                if(Scenarios.VeinMiner.isEnabled()) {
                     if(block.getType() == Material.DIAMOND_ORE) {
                         if(player.getItemInHand().getType() == Material.IRON_PICKAXE
                                 || player.getItemInHand().getType() == Material.DIAMOND_PICKAXE) {
@@ -56,16 +55,16 @@ public class VeinMinerListener implements Listener {
                             block.setType(Material.AIR);
                             block.getState().update();
 
-                            if(!Scenarios.BAREBONES.isEnabled() || !Scenarios.DIAMONDLESS.isEnabled()) {
-                                if(Scenarios.DOUBLEORES.isEnabled()) {
+                            if(!Scenarios.Barebones.isEnabled() || !Scenarios.Diamondless.isEnabled()) {
+                                if(Scenarios.DoubleOres.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, drops * 2 - 2));
-                                } else if(Scenarios.TRIPLEORES.isEnabled()) {
+                                } else if(Scenarios.TripleOres.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, drops * 3 - 3));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, drops - 1));
                                 }
 
-                                if(Scenarios.BLOODDIAMONDS.isEnabled()) {
+                                if(Scenarios.BloodDiamonds.isEnabled()) {
                                     player.damage(drops - 2);
                                 }
 
@@ -236,27 +235,27 @@ public class VeinMinerListener implements Listener {
                             block.setType(Material.AIR);
                             block.getState().update();
 
-                            if(Scenarios.DOUBLEORES.isEnabled()) {
-                                if(Scenarios.CUTCLEAN.isEnabled()) {
+                            if(Scenarios.DoubleOres.isEnabled()) {
+                                if(Scenarios.CutClean.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_INGOT, drops * 2 - 2));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_ORE, drops * 2 - 2));
                                 }
-                            } else if(Scenarios.TRIPLEORES.isEnabled()) {
-                                if(Scenarios.CUTCLEAN.isEnabled()) {
+                            } else if(Scenarios.TripleOres.isEnabled()) {
+                                if(Scenarios.CutClean.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_INGOT, drops * 3 - 3));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_ORE, drops * 3 - 3));
                                 }
                             } else {
-                                if(Scenarios.CUTCLEAN.isEnabled()) {
+                                if(Scenarios.CutClean.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_INGOT, drops - 1));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_ORE, drops - 1));
                                 }
                             }
 
-                            if(Scenarios.CUTCLEAN.isEnabled()) {
+                            if(Scenarios.CutClean.isEnabled()) {
                                 block.getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(2 * drops - 1);
                             }
                         }
@@ -289,27 +288,27 @@ public class VeinMinerListener implements Listener {
                             block.setType(Material.AIR);
                             block.getState().update();
 
-                            if(Scenarios.DOUBLEORES.isEnabled()) {
-                                if(Scenarios.CUTCLEAN.isEnabled()) {
+                            if(Scenarios.DoubleOres.isEnabled()) {
+                                if(Scenarios.CutClean.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_INGOT, drops * 2 - 2));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_ORE, drops * 2 - 2));
                                 }
-                            } else if(Scenarios.TRIPLEORES.isEnabled()) {
-                                if(Scenarios.CUTCLEAN.isEnabled()) {
+                            } else if(Scenarios.TripleOres.isEnabled()) {
+                                if(Scenarios.CutClean.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_INGOT, drops * 3 - 3));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_ORE, drops * 3 - 3));
                                 }
                             } else {
-                                if(Scenarios.CUTCLEAN.isEnabled()) {
+                                if(Scenarios.CutClean.isEnabled()) {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_INGOT, drops - 1));
                                 } else {
                                     block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_ORE, drops - 1));
                                 }
                             }
 
-                            if(Scenarios.CUTCLEAN.isEnabled()) {
+                            if(Scenarios.CutClean.isEnabled()) {
                                 block.getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(3 * drops - 1);
                             }
                         }
@@ -320,7 +319,7 @@ public class VeinMinerListener implements Listener {
                     event.setCancelled(true);
                     block.setType(Material.AIR);
 
-                    if(Scenarios.CUTCLEAN.isEnabled()) {
+                    if(Scenarios.CutClean.isEnabled()) {
                         block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.GOLD_INGOT));
                         block.getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(3);
                     } else {
@@ -330,7 +329,7 @@ public class VeinMinerListener implements Listener {
                     event.setCancelled(true);
                     block.setType(Material.AIR);
 
-                    if(Scenarios.CUTCLEAN.isEnabled()) {
+                    if(Scenarios.CutClean.isEnabled()) {
                         block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.IRON_INGOT));
                         block.getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(2);
                     } else {

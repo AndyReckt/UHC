@@ -17,7 +17,7 @@ public class RodlessListener implements Listener {
     @EventHandler
     public void handlePlayerInteractEvent(PlayerInteractEvent event) {
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.RODLESS.isEnabled()) {
+            if(Scenarios.Rodless.isEnabled()) {
                 if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) &&
                         event.getPlayer().getItemInHand().getType() == Material.FISHING_ROD) {
                     event.getPlayer().setItemInHand(new ItemStack(Material.AIR));

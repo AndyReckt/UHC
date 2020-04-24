@@ -39,7 +39,8 @@ public class ListCommand implements CommandExecutor {
             player.sendMessage(prefix + sColor + "Alive Players: " + mColor + game.getPlayers().size());
             player.sendMessage("");
             player.sendMessage(prefix + sColor + "Spectators: " + mColor + game.getSpectators().size());
-            player.sendMessage(prefix + sColor + "Moderators: " + mColor + Arrays.toString(stringArray));
+            player.sendMessage(prefix + sColor + "Moderators: " + mColor + Arrays.toString(stringArray).
+                    replace("[", "").replace("]", ""));
             player.sendMessage("§8§m---------------------------");
         }
         return false;

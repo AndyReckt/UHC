@@ -19,7 +19,7 @@ public class FlowerPowerListener implements Listener {
 
         Random random = new Random();
 
-        if(Scenarios.FLOWERPOWER.isEnabled()) {
+        if(Scenarios.FlowerPower.isEnabled()) {
             if(material == Material.getMaterial(38) || material == Material.YELLOW_FLOWER || material == Material.CROPS ||
                 material == Material.DOUBLE_PLANT) {
                 event.setCancelled(true);

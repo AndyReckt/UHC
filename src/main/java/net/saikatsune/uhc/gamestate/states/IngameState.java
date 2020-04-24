@@ -32,7 +32,7 @@ public class IngameState extends GameState {
 
         game.getTimeTask().runTask();
 
-        if(Scenarios.CUTCLEAN.isEnabled()) {
+        if(Scenarios.CutClean.isEnabled()) {
             Bukkit.broadcastMessage(prefix + ChatColor.YELLOW + "Remember: Sheep also drop leather.");
         }
 
@@ -43,7 +43,7 @@ public class IngameState extends GameState {
 
         game.getGameManager().setWhitelisted(false);
 
-        if(Scenarios.BESTPVE.isEnabled()) {
+        if(Scenarios.BestPVE.isEnabled()) {
             game.getGameManager().startBestPveTimer();
 
             for (UUID allPlayers : game.getPlayers()) {

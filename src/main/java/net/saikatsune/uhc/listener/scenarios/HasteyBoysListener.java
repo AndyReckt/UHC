@@ -15,7 +15,7 @@ public class HasteyBoysListener implements Listener {
 
     @EventHandler
     public void handlePrepareCraftEvent(PrepareItemCraftEvent event) {
-        if(Scenarios.HASTEYBOYS.isEnabled()) {
+        if(Scenarios.HasteyBoys.isEnabled()) {
             Set<Material> enchantmentList = new HashSet<>();
 
             enchantmentList.add(Material.WOOD_SPADE);

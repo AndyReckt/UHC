@@ -19,9 +19,16 @@ public class PlayerChatListener implements Listener {
     private String hostPrefix = game.getConfig().getString("CHAT.HOST-PREFIX").replace("&", "§");
     private String modPrefix = game.getConfig().getString("CHAT.MOD-PREFIX").replace("&", "§");
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void handleASyncPlayerChatEvent(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
+
+        if(game.isChatMuted()) {
+            if(!player.hasPermission("uhc.host")) {
+                event.setCancelled(true);
+                player.sendMessage(prefix + ChatColor.RED + "Global Chat is currently disabled!");
+            }
+        }
 
         if(!game.getSpectators().contains(player)) {
             if(game.getGameManager().isTeamGame()) {

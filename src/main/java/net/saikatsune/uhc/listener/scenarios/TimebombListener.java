@@ -32,22 +32,22 @@ public class TimebombListener implements Listener {
         Location location = player.getLocation();
         Inventory inventory = player.getInventory();
 
-        if (!Scenarios.TIMEBOMB.isEnabled()) {
+        if (!Scenarios.TimeBomb.isEnabled()) {
             player.getWorld().dropItemNaturally(player.getLocation(), new ItemHandler(Material.GOLDEN_APPLE).setDisplayName(ChatColor.GOLD + "Golden Head").build());
 
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.BAREBONES.isEnabled()) {
+                if(Scenarios.Barebones.isEnabled()) {
                     player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.DIAMOND));
                     player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.GOLDEN_APPLE));
                     player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.ARROW, 32));
                     player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.STRING, 2));
                 }
 
-                if(Scenarios.DIAMONDLESS.isEnabled()) {
+                if(Scenarios.Diamondless.isEnabled()) {
                     player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.DIAMOND));
                 }
 
-                if(Scenarios.GOLDLESS.isEnabled()) {
+                if(Scenarios.Goldless.isEnabled()) {
                     player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.GOLD_ORE, 8));
                 }
             }
@@ -67,18 +67,18 @@ public class TimebombListener implements Listener {
                 chest.getInventory().addItem(player.getInventory().getArmorContents());
                 chest.getInventory().addItem(new ItemHandler(Material.GOLDEN_APPLE).setDisplayName(ChatColor.GOLD + "Golden Head").build());
 
-                if(Scenarios.BAREBONES.isEnabled()) {
+                if(Scenarios.Barebones.isEnabled()) {
                     chest.getInventory().addItem(new ItemStack(Material.DIAMOND));
                     chest.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
                     chest.getInventory().addItem(new ItemStack(Material.ARROW, 32));
                     chest.getInventory().addItem(new ItemStack(Material.STRING, 2));
                 }
 
-                if(Scenarios.DIAMONDLESS.isEnabled()) {
+                if(Scenarios.Diamondless.isEnabled()) {
                     chest.getInventory().addItem(new ItemStack(Material.DIAMOND));
                 }
 
-                if(Scenarios.GOLDLESS.isEnabled()) {
+                if(Scenarios.Goldless.isEnabled()) {
                     chest.getInventory().addItem(new ItemStack(Material.GOLD_ORE, 8));
                 }
 

@@ -38,7 +38,7 @@ public class RelogTask {
                             try {
                                 game.getGameManager().dropPlayerDeathInventory(offlinePlayer.getUniqueId());
 
-                                if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
+                                if(Scenarios.BleedingSweets.isEnabled()) {
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
                                             game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
@@ -49,12 +49,12 @@ public class RelogTask {
                                             game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.STRING));
                                 }
 
-                                if(Scenarios.GOLDLESS.isEnabled()) {
+                                if(Scenarios.Goldless.isEnabled()) {
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
                                             game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 8));
                                 }
 
-                                if(Scenarios.DIAMONDLESS.isEnabled()) {
+                                if(Scenarios.Diamondless.isEnabled()) {
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
                                             game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                                 }

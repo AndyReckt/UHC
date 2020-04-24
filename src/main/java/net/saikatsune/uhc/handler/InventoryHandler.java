@@ -158,16 +158,15 @@ public class InventoryHandler {
     public void handlePlayersInventory(Player player) {
         Inventory inventory = Bukkit.createInventory(null, 6*9, mColor + "Alive Players");
 
-        for (UUID players : game.getPlayers()) {
-
-            Player allPlayers = Bukkit.getPlayer(players);
-
-            ItemStack playerStack = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
-            SkullMeta playersMeta = (SkullMeta) playerStack.getItemMeta();
-            playersMeta.setOwner(allPlayers.getName());
-            playersMeta.setDisplayName(allPlayers.getName());
-            playerStack.setItemMeta(playersMeta);
-            inventory.addItem(playerStack);
+        for (Player allPlayers : Bukkit.getOnlinePlayers()) {
+            if(game.getPlayers().contains(allPlayers.getUniqueId())) {
+                ItemStack playerStack = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+                SkullMeta playersMeta = (SkullMeta) playerStack.getItemMeta();
+                playersMeta.setOwner(allPlayers.getName());
+                playersMeta.setDisplayName(allPlayers.getName());
+                playerStack.setItemMeta(playersMeta);
+                inventory.addItem(playerStack);
+            }
         }
 
         player.openInventory(inventory);

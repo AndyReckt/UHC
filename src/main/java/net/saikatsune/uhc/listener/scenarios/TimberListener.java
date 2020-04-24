@@ -22,7 +22,7 @@ public class TimberListener implements Listener {
 
         if(game.getSpectators().contains(player)) event.setCancelled(true);
 
-        if(Scenarios.TIMBER.isEnabled()) {
+        if(Scenarios.Timber.isEnabled()) {
             if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
                 return;
             }

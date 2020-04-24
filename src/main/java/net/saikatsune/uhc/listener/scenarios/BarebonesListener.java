@@ -21,7 +21,7 @@ public class BarebonesListener implements Listener {
         Player player = event.getPlayer();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.BAREBONES.isEnabled()) {
+            if(Scenarios.Barebones.isEnabled()) {
                 if(event.getBlock().getType() == Material.DIAMOND_ORE || event.getBlock().getType() == Material.GOLD_ORE) {
                     event.setCancelled(true);
                     event.getBlock().setType(Material.AIR);

@@ -35,9 +35,9 @@ public class GiveAllCommand implements CommandExecutor {
                                             Integer.parseInt(args[1])));
                                     allPlayers.sendMessage(prefix + sColor + "You received " + mColor + args[1] + "x " +
                                             args[0] + sColor + "!");
-                                    game.getGameManager().playSound();
                                 }
                             }
+                            game.getGameManager().playSound();
                             player.sendMessage(prefix + sColor + "You gave every player " + mColor + args[1] + "x " +
                                     args[0] + sColor + "!");
                         } else {

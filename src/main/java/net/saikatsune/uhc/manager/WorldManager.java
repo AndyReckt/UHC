@@ -2,6 +2,7 @@ package net.saikatsune.uhc.manager;
 
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.handler.FileHandler;
+import net.saikatsune.uhc.populators.CanePopulator;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -37,6 +38,8 @@ public class WorldManager {
     public void loadWorld(String worldName, int worldRadius, int loadingSpeed) {
         Bukkit.broadcastMessage(prefix + sColor + "Started clearing the world " + mColor + worldName + sColor + "...");
         this.clearCenter(Bukkit.getWorld(worldName));
+
+        new CanePopulator().initialize(Bukkit.getWorld(worldName));
 
         new BukkitRunnable() {
             @Override

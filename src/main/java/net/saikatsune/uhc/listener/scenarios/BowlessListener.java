@@ -18,7 +18,7 @@ public class BowlessListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.BOWLESS.isEnabled()) {
+            if(Scenarios.Bowless.isEnabled()) {
                 if ((event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.RIGHT_CLICK_AIR) &&
                         event.getPlayer().getItemInHand().getType() == Material.BOW) {
                     event.getPlayer().setItemInHand(new ItemStack(Material.AIR));

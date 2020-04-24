@@ -18,7 +18,7 @@ public class BetaZombiesListener implements Listener {
     public void handleEntityDeathEvent(EntityDeathEvent event) {
         if(event.getEntity() instanceof Zombie) {
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.BETAZOMBIES.isEnabled()) {
+                if(Scenarios.BetaZombies.isEnabled()) {
                     event.getDrops().clear();
 
                     event.getDrops().add(new ItemStack(Material.FEATHER));

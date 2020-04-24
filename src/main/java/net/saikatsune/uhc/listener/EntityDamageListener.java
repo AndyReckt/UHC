@@ -24,7 +24,6 @@ import org.bukkit.event.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 
@@ -98,7 +97,7 @@ public class EntityDamageListener implements Listener {
                         try {
                             game.getGameManager().dropPlayerDeathInventory(dyingPlayer.getUniqueId(), player);
 
-                            if(Scenarios.BLEEDINGSWEETS.isEnabled()) {
+                            if(Scenarios.BleedingSweets.isEnabled()) {
                                 game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                                 game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
@@ -109,12 +108,12 @@ public class EntityDamageListener implements Listener {
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.STRING));
                             }
 
-                            if(Scenarios.GOLDLESS.isEnabled()) {
+                            if(Scenarios.Goldless.isEnabled()) {
                                 game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 8));
                             }
 
-                            if(Scenarios.DIAMONDLESS.isEnabled()) {
+                            if(Scenarios.Diamondless.isEnabled()) {
                                 game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                             }
@@ -355,10 +354,13 @@ public class EntityDamageListener implements Listener {
 
     @EventHandler
     public void handleFoodLevelChangeEvent(FoodLevelChangeEvent event) {
+        Player player = (Player) event.getEntity();
+
+        if(game.getSpectators().contains(player))event.setCancelled(true);
+
         if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
             event.setCancelled(true);
         } else {
-            Player player = (Player)event.getEntity();
             if (event.getFoodLevel() < player.getFoodLevel() && (new Random()).nextInt(100) > 4)
                 event.setCancelled(true);
         }

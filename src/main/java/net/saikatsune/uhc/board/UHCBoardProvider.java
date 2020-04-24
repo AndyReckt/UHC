@@ -1,9 +1,11 @@
 package net.saikatsune.uhc.board;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.states.LobbyState;
 import net.saikatsune.uhc.gamestate.states.ScatteringState;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -40,6 +42,79 @@ public class UHCBoardProvider implements BoardProvider {
 
         if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
             if(!game.getGameManager().isTeamGame()) {
+                for (int i = 0; i < config.getStringList("SCOREBOARDS.SOLO.LOBBY.LINES").size(); i++) {
+                    List<String> path = config.getStringList("SCOREBOARDS.SOLO.LOBBY.LINES");
+
+                    lines.add(path.get(i).replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", String.valueOf(game.getSpectators().size()))).
+                            replace("%gameHost%", game.getGameHost()).
+                            replace("%scenarios%", "Gamemodes:")
+                            .replace("&", "§"));
+
+                    if(config.getStringList("SCOREBOARDS.SOLO.LOBBY.LINES").get(i).contains("%scenarios%")) {
+                        for (int y = 0; y < game.getScenariosInList().size(); y++) {
+                            if (y <= 2) {
+                                lines.add(ChatColor.WHITE + " - " + game.getScenariosInList().get(y));
+                            } else {
+                                lines.removeIf(line -> line.contains("more..."));
+
+                                int scenariosMore = game.getScenariosInList().size() - 3;
+
+                                lines.add(ChatColor.WHITE + " - +" + scenariosMore + " more...");
+                            }
+                        }
+                    }
+                }
+            } else {
+                for (int i = 0; i < config.getStringList("SCOREBOARDS.TEAMS.LOBBY.LINES").size(); i++) {
+                    List<String> path = config.getStringList("SCOREBOARDS.TEAMS.LOBBY.LINES");
+
+                    lines.add(path.get(i).replace("%players%", String.valueOf(game.getPlayers().size())).
+                            replace("%gameType%", game.getTeamSizeInString()).
+                            replace("%gameTime%", game.getTimeTask().getFormattedTime()).
+                            replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
+                            replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
+                                    replace("%spectators%", String.valueOf(game.getSpectators().size()))).
+                            replace("%gameHost%", game.getGameHost()).
+                            replace("%scenarios%", "Gamemodes:")
+                            .replace("&", "§"));
+
+                    if(config.getStringList("SCOREBOARDS.TEAMS.LOBBY.LINES").get(i).contains("%scenarios%")) {
+                        for (int y = 0; y < game.getScenariosInList().size(); y++) {
+                            if (y <= 2) {
+                                lines.add(ChatColor.WHITE + " - " + game.getScenariosInList().get(y));
+                            } else {
+                                lines.removeIf(line -> line.contains("more..."));
+
+                                int scenariosMore = game.getScenariosInList().size() - 3;
+
+                                lines.add(ChatColor.WHITE + " - +" + scenariosMore + " more...");
+                            }
+                        }
+                    }
+                }
+            }
+
+            /*
+            lines.add(ChatColor.RED + "Game Host: ");
+                    lines.add(ChatColor.WHITE + " - " + game.getGameHost());
+                    lines.add("");
+                    lines.add(ChatColor.RED + "Teams: " + ChatColor.WHITE + game.getTeamSizeInString());
+                    lines.add("");
+                    lines.add(ChatColor.RED + "Gamemodes: ");
+
+                    lines.add("");
+                    lines.add(ChatColor.RED + "Players: " + ChatColor.WHITE + game.getPlayers().size());
+                    lines.add("");
+                    lines.add(ChatColor.GRAY + "www.daredevil.rip");
+             */
+
+            /*
+            if(!game.getGameManager().isTeamGame()) {
                 for (String string : config.getStringList("SCOREBOARDS.SOLO.LOBBY.LINES")) {
                     string = string.replace("%players%", String.valueOf(game.getPlayers().size())).
                             replace("%gameType%", game.getTeamSizeInString()).
@@ -47,7 +122,8 @@ public class UHCBoardProvider implements BoardProvider {
                             replace("%borderSize%", String.valueOf(game.getConfigManager().getBorderSize())).
                             replace("%kills%", String.valueOf(game.getPlayerKills().get(player.getUniqueId())).
                                     replace("%spectators%", "" + game.getSpectators().size())).
-                            replace("%gameHost%", game.getGameHost());
+                            replace("%gameHost%", game.getGameHost()).
+                            replace("%scenarios%", "");
                     lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
                 }
             } else {
@@ -63,6 +139,7 @@ public class UHCBoardProvider implements BoardProvider {
                     lines.add(string.replace("&", "§").replace("%spectators%", String.valueOf(game.getSpectators().size())));
                 }
             }
+             */
         } else if(game.getGameStateManager().getCurrentGameState() instanceof ScatteringState) {
             lines.clear();
             if(!game.getGameManager().isTeamGame()) {

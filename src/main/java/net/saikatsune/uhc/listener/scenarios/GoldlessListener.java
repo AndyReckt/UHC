@@ -18,7 +18,7 @@ public class GoldlessListener implements Listener {
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {
-        if(Scenarios.GOLDLESS.isEnabled()) {
+        if(Scenarios.Goldless.isEnabled()) {
             if(event.getBlock().getType() == Material.GOLD_ORE) {
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
@@ -32,7 +32,7 @@ public class GoldlessListener implements Listener {
         Player dyingPlayer = event.getEntity();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.GOLDLESS.isEnabled()) {
+            if(Scenarios.Goldless.isEnabled()) {
                 dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.GOLD_INGOT, 8));
             }
         }

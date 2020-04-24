@@ -15,8 +15,8 @@ public class DoubleOresListener implements Listener {
 
         switch (event.getBlock().getType()) {
             case IRON_ORE:
-                if(Scenarios.DOUBLEORES.isEnabled()) {
-                    if(Scenarios.CUTCLEAN.isEnabled()) {
+                if(Scenarios.DoubleOres.isEnabled()) {
+                    if(Scenarios.CutClean.isEnabled()) {
                         event.setCancelled(true);
                         event.getBlock().setType(Material.AIR);
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 2));
@@ -25,8 +25,8 @@ public class DoubleOresListener implements Listener {
                         event.getBlock().setType(Material.AIR);
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_ORE, 2));
                     }
-                } else if(Scenarios.TRIPLEORES.isEnabled()) {
-                    if(Scenarios.CUTCLEAN.isEnabled()) {
+                } else if(Scenarios.TripleOres.isEnabled()) {
+                    if(Scenarios.CutClean.isEnabled()) {
                         event.setCancelled(true);
                         event.getBlock().setType(Material.AIR);
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 3));
@@ -39,8 +39,8 @@ public class DoubleOresListener implements Listener {
                 break;
 
             case GOLD_ORE:
-                if(Scenarios.DOUBLEORES.isEnabled()) {
-                    if(Scenarios.CUTCLEAN.isEnabled()) {
+                if(Scenarios.DoubleOres.isEnabled()) {
+                    if(Scenarios.CutClean.isEnabled()) {
                         event.setCancelled(true);
                         event.getBlock().setType(Material.AIR);
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
@@ -49,8 +49,8 @@ public class DoubleOresListener implements Listener {
                         event.getBlock().setType(Material.AIR);
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_ORE, 2));
                     }
-                } else if(Scenarios.TRIPLEORES.isEnabled()) {
-                    if(Scenarios.CUTCLEAN.isEnabled()) {
+                } else if(Scenarios.TripleOres.isEnabled()) {
+                    if(Scenarios.CutClean.isEnabled()) {
                         event.setCancelled(true);
                         event.getBlock().setType(Material.AIR);
                         event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
@@ -63,12 +63,12 @@ public class DoubleOresListener implements Listener {
                 break;
 
             case DIAMOND_ORE:
-                if(Scenarios.DOUBLEORES.isEnabled()) {
+                if(Scenarios.DoubleOres.isEnabled()) {
                     event.setCancelled(true);
                     event.getBlock().setType(Material.AIR);
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.DIAMOND, 2));
                     event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(6);
-                } else if(Scenarios.TRIPLEORES.isEnabled()) {
+                } else if(Scenarios.TripleOres.isEnabled()) {
                     event.setCancelled(true);
                     event.getBlock().setType(Material.AIR);
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.DIAMOND, 3));

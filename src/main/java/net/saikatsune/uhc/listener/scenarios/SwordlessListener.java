@@ -3,7 +3,6 @@ package net.saikatsune.uhc.listener.scenarios;
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.states.IngameState;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +12,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class SwordlessListener implements Listener {
 
@@ -26,7 +24,7 @@ public class SwordlessListener implements Listener {
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             switch (event.getRecipe().getResult().getType()) {
                 case WOOD_SWORD: case GOLD_SWORD: case STONE_SWORD: case IRON_SWORD: case DIAMOND_SWORD:
-                    if(Scenarios.SWORDLESS.isEnabled()) {
+                    if(Scenarios.Swordless.isEnabled()) {
                         event.getInventory().setResult(new ItemStack(Material.AIR));
                     }
                 break;
@@ -44,7 +42,7 @@ public class SwordlessListener implements Listener {
                 switch (player.getItemInHand().getType()) {
                     case WOOD_SWORD: case GOLD_SWORD: case STONE_SWORD: case IRON_SWORD: case DIAMOND_SWORD:
                         if(player.getInventory().contains(player.getItemInHand().getType())) {
-                            if(Scenarios.SWORDLESS.isEnabled()) {
+                            if(Scenarios.Swordless.isEnabled()) {
                                 player.getInventory().remove(player.getItemInHand());
                             }
                         }
@@ -64,7 +62,7 @@ public class SwordlessListener implements Listener {
                     switch (event.getCurrentItem().getType()) {
                         case WOOD_SWORD: case GOLD_SWORD: case STONE_SWORD: case IRON_SWORD: case DIAMOND_SWORD:
                             if(player.getInventory().contains(player.getItemInHand().getType())) {
-                                if(Scenarios.SWORDLESS.isEnabled()) {
+                                if(Scenarios.Swordless.isEnabled()) {
                                     player.getInventory().remove(player.getItemInHand());
                                 }
                             }

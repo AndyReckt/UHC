@@ -19,7 +19,7 @@ public class DiamondlessListener implements Listener {
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {
         if(event.getBlock().getType() == Material.DIAMOND_ORE) {
-            if(Scenarios.DIAMONDLESS.isEnabled()) {
+            if(Scenarios.Diamondless.isEnabled()) {
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
                 event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(5);
@@ -32,7 +32,7 @@ public class DiamondlessListener implements Listener {
         Player dyingPlayer = event.getEntity();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.DIAMONDLESS.isEnabled()) {
+            if(Scenarios.Diamondless.isEnabled()) {
                 dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.DIAMOND));
             }
         }

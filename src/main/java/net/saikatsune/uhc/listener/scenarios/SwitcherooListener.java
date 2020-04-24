@@ -34,7 +34,7 @@ public class SwitcherooListener implements Listener {
                                 Player shooter = (Player) arrow.getShooter();
                                 Player shot = (Player) event.getEntity();
 
-                                if(Scenarios.SWITCHEROO.isEnabled()) {
+                                if(Scenarios.Switcheroo.isEnabled()) {
                                     newLocation.put(shooter, shot.getLocation());
                                     newLocation.put(shot, shooter.getLocation());
 

@@ -18,7 +18,7 @@ public class OreFrenzyListener implements Listener {
 
         Player player = event.getPlayer();
 
-        if(Scenarios.OREFRENZY.isEnabled()) {
+        if(Scenarios.OreFrenzy.isEnabled()) {
             if (player.getGameMode() == GameMode.CREATIVE) {
                 return;
             }

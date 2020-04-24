@@ -59,7 +59,7 @@ public class LatescatterCommand implements CommandExecutor {
                                 game.getLoggedPlayers().add(player.getUniqueId());
                                 game.getWhitelisted().add(player.getUniqueId());
 
-                                if(Scenarios.GONEFISHING.isEnabled()) {
+                                if(Scenarios.GoneFishing.isEnabled()) {
                                     player.getInventory().addItem(new ItemStack(Material.ANVIL, 20));
 
                                     player.setLevel(30000);
@@ -71,7 +71,7 @@ public class LatescatterCommand implements CommandExecutor {
                                     player.getInventory().addItem(fishingRod);
                                 }
 
-                                if(Scenarios.INFINITEENCHANT.isEnabled()) {
+                                if(Scenarios.InfiniteEnchant.isEnabled()) {
                                     player.setLevel(30000);
                                     player.getInventory().addItem(new ItemStack(Material.ENCHANTMENT_TABLE, 64));
                                     player.getInventory().addItem(new ItemStack(Material.ANVIL, 64));
@@ -79,7 +79,7 @@ public class LatescatterCommand implements CommandExecutor {
                                     player.getInventory().addItem(new ItemStack(Material.BOOKSHELF, 64));
                                 }
 
-                                if(Scenarios.BESTPVE.isEnabled()) {
+                                if(Scenarios.BestPVE.isEnabled()) {
                                     game.getBestPvePlayers().add(player.getUniqueId());
                                     player.sendMessage(prefix + ChatColor.GREEN + "You have been added to the BestPVE list.");
                                 }

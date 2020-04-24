@@ -21,7 +21,7 @@ public class BackpackCommand implements CommandExecutor {
         if(cmd.getName().equalsIgnoreCase("backpack")) {
             if(sender instanceof Player) {
                 Player player = (Player) sender;
-                if(Scenarios.BACKPACKS.isEnabled()) {
+                if(Scenarios.Backpacks.isEnabled()) {
                     if(game.getGameManager().isTeamGame()) {
                         if(game.getPlayers().contains(player.getUniqueId())) {
                             if(game.getTeamNumber().get(player.getUniqueId()) != -1) {

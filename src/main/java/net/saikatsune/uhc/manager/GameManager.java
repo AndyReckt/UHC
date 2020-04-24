@@ -106,7 +106,7 @@ public class GameManager {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        if(Scenarios.BESTPVE.isEnabled()) {
+                        if(Scenarios.BestPVE.isEnabled()) {
                             for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                                 if(game.getBestPvePlayers().contains(allPlayers.getUniqueId())) {
                                     allPlayers.setMaxHealth(allPlayers.getMaxHealth() + 2);
@@ -315,7 +315,8 @@ public class GameManager {
 
                     String[] stringArray = winnerNames.toArray(new String[winnerNames.size()]);
 
-                    Bukkit.broadcastMessage(prefix + mColor + "Congratulations to " + Arrays.toString(stringArray) + " for winning this game!");
+                    Bukkit.broadcastMessage(prefix + mColor + "Congratulations to " + Arrays.toString(stringArray).
+                            replace("[", "").replace("]", "") + " for winning this game!");
 
                     Bukkit.broadcastMessage(prefix + ChatColor.RED + "The server restarts in 1 minute!");
 

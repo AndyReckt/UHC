@@ -22,7 +22,7 @@ public class BestPVEListener implements Listener {
             Player player = (Player) event.getEntity();
 
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.BESTPVE.isEnabled()) {
+                if(Scenarios.BestPVE.isEnabled()) {
                     if(!event.isCancelled()) {
                         if(game.getBestPvePlayers().contains(player.getUniqueId())) {
                             game.getBestPvePlayers().remove(player.getUniqueId());
@@ -39,7 +39,7 @@ public class BestPVEListener implements Listener {
         Player killer = event.getEntity().getKiller();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.BESTPVE.isEnabled()) {
+            if(Scenarios.BestPVE.isEnabled()) {
                 if(killer != null) {
                     if(!game.getBestPvePlayers().contains(killer.getUniqueId())) {
                         game.getBestPvePlayers().add(killer.getUniqueId());

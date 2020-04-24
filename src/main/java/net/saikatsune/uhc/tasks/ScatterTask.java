@@ -5,7 +5,6 @@ import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.GameState;
 import net.saikatsune.uhc.handler.TeamHandler;
 import org.bukkit.*;
-import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
-import java.util.logging.Level;
 
 @SuppressWarnings("deprecation")
 public class ScatterTask {
@@ -134,6 +132,8 @@ public class ScatterTask {
                         if(game.getPlayers().contains(allPlayers.getUniqueId())) {
                             game.getLoggedPlayers().add(allPlayers.getUniqueId());
                             game.getWhitelisted().add(allPlayers.getUniqueId());
+
+                            game.getGameManager().resetPlayer(allPlayers);
                         }
                     }
 
@@ -154,7 +154,7 @@ public class ScatterTask {
                                 }
                             }
 
-                            if(Scenarios.GONEFISHING.isEnabled()) {
+                            if(Scenarios.GoneFishing.isEnabled()) {
                                 for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                                     if(game.getPlayers().contains(allPlayers.getUniqueId())) {
                                         allPlayers.getInventory().addItem(new ItemStack(Material.ANVIL, 20));
@@ -170,7 +170,7 @@ public class ScatterTask {
                                 }
                             }
 
-                            if(Scenarios.INFINITEENCHANT.isEnabled()) {
+                            if(Scenarios.InfiniteEnchant.isEnabled()) {
                                 for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                                     if(game.getPlayers().contains(allPlayers.getUniqueId())) {
                                         allPlayers.setLevel(30000);

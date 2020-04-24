@@ -28,7 +28,7 @@ public class LongShotsListener implements Listener {
                 Arrow arrow = (Arrow) event.getDamager();
 
                 if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                    if(Scenarios.LONGSHOTS.isEnabled()) {
+                    if(Scenarios.LongShots.isEnabled()) {
                         if(arrow.getShooter() instanceof Player) {
                             Player shooter = (Player) arrow.getShooter();
                             Player shot = (Player) event.getEntity();

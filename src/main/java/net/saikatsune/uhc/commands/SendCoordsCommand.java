@@ -32,7 +32,7 @@ public class SendCoordsCommand implements CommandExecutor {
                         for (Player allPlayers : Bukkit.getOnlinePlayers()) {
                             if(teamHandler.getTeamMembers().contains(allPlayers.getUniqueId())) {
                                 allPlayers.sendMessage(prefix + mColor + player.getName() + "'s coordinates: " + sColor +
-                                        player.getLocation().getBlockX() + "/" + player.getLocation().getBlockY() + "/" + player.getLocation().getBlockZ() + "!");
+                                        player.getLocation().getBlockX() + "/" + player.getLocation().getBlockY() + "/" + player.getLocation().getBlockZ());
                             }
                         }
                     } else {

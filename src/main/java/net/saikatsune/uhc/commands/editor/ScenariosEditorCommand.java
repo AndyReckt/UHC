@@ -2,6 +2,7 @@ package net.saikatsune.uhc.commands.editor;
 
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.Scenarios;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -40,11 +41,11 @@ public class ScenariosEditorCommand implements CommandExecutor, Listener {
                                 if(scenarios.isEnabled()) {
                                     scenarios.setEnabled(false);
 
-                                    game.getScenariosInList().remove(scenarios.getScenarioItem().getItemMeta().getDisplayName());
+                                    game.getScenariosInList().remove(ChatColor.WHITE + scenarios.name());
                                 } else {
                                     scenarios.setEnabled(true);
 
-                                    game.getScenariosInList().add(scenarios.getScenarioItem().getItemMeta().getDisplayName());
+                                    game.getScenariosInList().add(ChatColor.WHITE + scenarios.name());
                                 }
                             }
                         }

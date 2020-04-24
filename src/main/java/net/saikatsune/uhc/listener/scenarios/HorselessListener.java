@@ -16,7 +16,7 @@ public class HorselessListener implements Listener {
     public void handleVehicleEnterEvent(VehicleEnterEvent event) {
         if(event.getVehicle().getType() == EntityType.HORSE) {
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.HORSELESS.isEnabled()) {
+                if(Scenarios.Horseless.isEnabled()) {
                     event.setCancelled(true);
                 }
             }

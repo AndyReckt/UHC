@@ -31,7 +31,7 @@ public class ConfigCommand implements CommandExecutor {
             player.sendMessage(sColor + "Strength II: " + mColor + game.getConfigManager().isStrength2());
             player.sendMessage(sColor + "Enderpearl Damage: " + mColor + game.getConfigManager().isEnderpearlDamage());
             player.sendMessage(sColor + "God Apples: " + mColor + "false");
-            if(Scenarios.HORSELESS.isEnabled()) {
+            if(Scenarios.Horseless.isEnabled()) {
                 player.sendMessage(sColor + "Horses: " + mColor + "false");
             } else {
                 player.sendMessage(sColor + "Horses: " + mColor + "true");

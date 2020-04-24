@@ -19,7 +19,7 @@ public class BloodDiamondsListener implements Listener {
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(event.getBlock().getType() == Material.DIAMOND_ORE) {
-                if(Scenarios.BLOODDIAMONDS.isEnabled()) {
+                if(Scenarios.BloodDiamonds.isEnabled()) {
                     player.setHealth(player.getHealth() - 1);
                 }
             }

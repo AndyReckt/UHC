@@ -29,7 +29,7 @@ public class NoCleanListener implements Listener {
         Player killer = death.getKiller();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.NOCLEAN.isEnabled()) {
+            if(Scenarios.NoClean.isEnabled()) {
                 if(killer != null) {
                     noCleanPlayers.add(killer.getUniqueId());
                     killer.sendMessage(prefix + ChatColor.GREEN + "[NoClean] You are now protected to any damage for 20 seconds.");

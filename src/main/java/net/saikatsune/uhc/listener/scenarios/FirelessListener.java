@@ -17,7 +17,7 @@ public class FirelessListener implements Listener {
         if(event.getEntity() instanceof Player) {
 
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.FIRELESS.isEnabled()) {
+                if(Scenarios.Fireless.isEnabled()) {
                     if(event.getCause() == EntityDamageEvent.DamageCause.FIRE || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK ||
                             event.getCause() == EntityDamageEvent.DamageCause.LAVA) {
                         event.setCancelled(true);

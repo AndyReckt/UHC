@@ -22,7 +22,7 @@ public class WebCageListener implements Listener {
         Player player = event.getEntity();
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-            if(Scenarios.WEBCAGE.isEnabled()) {
+            if(Scenarios.WebCage.isEnabled()) {
                 if(player.getKiller() != null) {
                     List<Location> locations = this.getSphere(player.getLocation(), 5, true);
                     for(Location blocks : locations) {

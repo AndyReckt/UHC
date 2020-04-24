@@ -16,7 +16,7 @@ public class NoFallListener implements Listener {
     public void handleEntityDamageEvent(EntityDamageEvent event) {
         if(event.getEntity() instanceof Player) {
             if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
-                if(Scenarios.NOFALL.isEnabled()) {
+                if(Scenarios.NoFall.isEnabled()) {
                     if(event.getCause() == EntityDamageEvent.DamageCause.FALL) {
                         event.setCancelled(true);
                     }
