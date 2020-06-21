@@ -1,6 +1,6 @@
 name: UHC
 author: Saikatsune
-version: 0.9.9-PRE-RELEASE
+version: 1.0.0-A
 main: net.saikatsune.uhc.Game
 
 commands:
@@ -51,6 +51,10 @@ commands:
     permission: uhc.host
   host:
     permission: uhc.host
+  disqualify:
+    permission: uhc.host
+  practice:
+    aliases: [prac, arena, a]
   health:
     aliases: [h]
   teamchat:
@@ -67,5 +71,3 @@ commands:
   config:
   scenarios:
   stats:
-  practice:
-    aliases: [prac, arena, a]

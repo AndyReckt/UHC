@@ -17,19 +17,19 @@ import java.util.*;
 @SuppressWarnings("deprecation")
 public class ScatterTask {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     private int taskID;
 
-    private List<UUID> playersToScatter = new ArrayList<>();
-    private List<UUID> playersScattered = new ArrayList<>();
+    private final List<UUID> playersToScatter = new ArrayList<>();
+    private final List<UUID> playersScattered = new ArrayList<>();
 
-    private List<UUID> queuedPlayers = new ArrayList<>();
+    private final List<UUID> queuedPlayers = new ArrayList<>();
 
     public void runTask() {
         game.setChatMuted(true);
@@ -44,13 +44,13 @@ public class ScatterTask {
                     Random randomLocation = new Random();
 
                     int xPositive = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                    int xNegative = -game.getConfigManager().getBorderSize() - 1 + (int) (Math.random() * ((-(-game.getConfigManager().getBorderSize() - 1)) + 1));
-                    int x = (Math.random() <= 0.5) ? xPositive : xNegative;
+                    int xNegative = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int x = (Math.random() <= 0.5) ? xPositive : -xNegative;
 
 
                     int zPositive = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
-                    int zNegative = -game.getConfigManager().getBorderSize() - 1 + (int) (Math.random() * ((-(-game.getConfigManager().getBorderSize() - 1)) + 1));
-                    int z = (Math.random() <= 0.5) ? zPositive : zNegative;
+                    int zNegative = randomLocation.nextInt(game.getConfigManager().getBorderSize() - 1);
+                    int z = (Math.random() <= 0.5) ? zPositive : -zNegative;
 
                     int y = Bukkit.getWorld("uhc_world").getHighestBlockYAt(x, z);
 
@@ -117,9 +117,11 @@ public class ScatterTask {
                         for (TeamHandler teamHandler : game.getTeamManager().getTeams().values()) {
                             for (UUID toTeleport : teamHandler.getTeamMembers()) {
                                 Player playerToTeleport = Bukkit.getPlayer(toTeleport);
-                                if(teamHandler.getTeamLeader() != null) {
-                                    if(teamHandler.getTeamMembers().contains(teamHandler.getTeamLeader())) {
-                                        playerToTeleport.teleport(Bukkit.getPlayer(teamHandler.getTeamLeader()));
+                                if(playerToTeleport != null) {
+                                    if(teamHandler.getTeamLeader() != null) {
+                                        if(teamHandler.getTeamMembers().contains(teamHandler.getTeamLeader())) {
+                                            playerToTeleport.teleport(Bukkit.getPlayer(teamHandler.getTeamLeader()));
+                                        }
                                     }
                                 }
                             }

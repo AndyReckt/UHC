@@ -8,7 +8,7 @@ import net.saikatsune.uhc.gamestate.states.ScatteringState;
 
 public class GameStateManager {
 
-    private GameState[] gameStates = new GameState[4];
+    private final GameState[] gameStates = new GameState[4];
     private GameState currentGameState;
 
     public GameStateManager() {

@@ -14,7 +14,7 @@ import org.bukkit.potion.PotionType;
 
 public class PlayerConsumeListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handlePlayerConsumeEvent(PlayerItemConsumeEvent event) {

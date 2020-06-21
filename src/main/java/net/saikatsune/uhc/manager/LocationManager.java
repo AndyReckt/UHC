@@ -12,10 +12,10 @@ import java.io.IOException;
 
 public class LocationManager {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private File file = new File("plugins/" + game.getDescription().getName() + "/locations.yml");
-    private FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+    private final File file = new File("plugins/" + game.getDescription().getName() + "/locations.yml");
+    private final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
     private void saveConfig() {
         try {

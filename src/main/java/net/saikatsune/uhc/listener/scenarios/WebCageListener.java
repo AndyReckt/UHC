@@ -15,7 +15,7 @@ import java.util.List;
 
 public class WebCageListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handlePlayerDeathEvent(PlayerDeathEvent event) {

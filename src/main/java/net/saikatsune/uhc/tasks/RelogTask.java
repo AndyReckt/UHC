@@ -2,6 +2,7 @@ package net.saikatsune.uhc.tasks;
 
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.Scenarios;
+import net.saikatsune.uhc.handler.ItemHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @SuppressWarnings("deprecation")
 public class RelogTask {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     private int taskID;
 
@@ -31,12 +32,12 @@ public class RelogTask {
 
                             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(loggedOutPlayers);
 
-                            Bukkit.broadcastMessage(ChatColor.RED + offlinePlayer.getName() + ChatColor.GRAY +
-                                    "[" + game.getPlayerKills().get(offlinePlayer.getUniqueId()) + "] " + ChatColor.YELLOW +
-                                    "was disconnected for too long and has been disqualified.");
-
                             try {
                                 game.getGameManager().dropPlayerDeathInventory(offlinePlayer.getUniqueId());
+
+                                game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItem(
+                                        game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemHandler(Material.GOLDEN_APPLE).setDisplayName(
+                                                ChatColor.GOLD + "Golden Head").build());
 
                                 if(Scenarios.BleedingSweets.isEnabled()) {
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
@@ -58,26 +59,9 @@ public class RelogTask {
                                     game.getDeathLocation().get(offlinePlayer.getUniqueId()).getWorld().dropItemNaturally(
                                             game.getDeathLocation().get(offlinePlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                                 }
-                            } catch (Exception ignored) {
+                            } catch (Exception ignored) {}
 
-                            }
-
-                            game.getGameManager().removeCombatVillager(game.getCombatVillagerUUID().get(offlinePlayer.getUniqueId()));
-                            game.getLoggedPlayers().remove(offlinePlayer.getUniqueId());
-                            game.getWhitelisted().remove(offlinePlayer.getUniqueId());
-                            game.getPlayers().remove(offlinePlayer.getUniqueId());
-
-                            game.getDeadPlayersByUUID().add(offlinePlayer.getUniqueId());
-
-                            if(game.isDatabaseActive()) {
-                                game.getDatabaseManager().addDeaths(offlinePlayer, 1);
-                            }
-
-                            if(game.getGameManager().isTeamGame()) {
-                                game.getGameManager().removeDeadTeams();
-                            }
-
-                            game.getGameManager().checkWinner();
+                            game.getGameManager().disqualifyPlayer(offlinePlayer);
                         }
                     }
                 } catch (Exception ignored) {

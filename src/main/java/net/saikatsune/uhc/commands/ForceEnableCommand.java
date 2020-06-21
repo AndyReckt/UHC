@@ -9,7 +9,7 @@ import org.bukkit.command.CommandSender;
 
 public class ForceEnableCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

@@ -9,16 +9,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 public class PracticeCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -39,7 +37,7 @@ public class PracticeCommand implements CommandExecutor {
                                     game.getArenaPlayers().remove(player.getUniqueId());
                                     player.getInventory().clear();
                                     player.getInventory().setArmorContents(null);
-                                    //Set lobby inventory
+                                    game.getInventoryHandler().handleLobbyInventory(player);
                                     player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
                                     player.setHealth(20);
                                     player.sendMessage(prefix + sColor + "You have left the arena!");

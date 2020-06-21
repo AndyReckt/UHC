@@ -9,9 +9,9 @@ import org.bukkit.World;
 
 public class ButcherTask extends BukkitRunnable {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private double ticksPerSecond = game.getServer().spigot().getTPS()[0];
+    private final double ticksPerSecond = game.getServer().spigot().getTPS()[0];
 
     public void run() {
         if (this.game.getGameStateManager().getCurrentGameState() instanceof IngameState) {

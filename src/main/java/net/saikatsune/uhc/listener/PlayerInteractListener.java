@@ -1,7 +1,9 @@
 package net.saikatsune.uhc.listener;
 
 import net.saikatsune.uhc.Game;
+import net.saikatsune.uhc.enums.Scenarios;
 import net.saikatsune.uhc.gamestate.states.IngameState;
+import net.saikatsune.uhc.gamestate.states.LobbyState;
 import net.saikatsune.uhc.handler.ItemHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,12 +21,12 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class PlayerInteractListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @EventHandler
     public void handlePlayerInteractEvent(PlayerInteractEvent event) {
@@ -70,6 +72,26 @@ public class PlayerInteractListener implements Listener {
                         }
                     } else {
                         player.sendMessage(prefix + ChatColor.RED + "There is currently no game running!");
+                    }
+                }
+            }
+        } else {
+            if(player.getItemInHand().getType() == Material.BOOK) {
+                if(player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(mColor + "Game Configuration")) {
+                    if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
+                        player.performCommand("config");
+                    }
+                }
+            } else if(player.getItemInHand().getType() == Material.PAPER) {
+                if(player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(mColor + "Game Scenarios")) {
+                    if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
+                        player.performCommand("scenarios");
+                    }
+                }
+            } else if(player.getItemInHand().getType() == Material.BEACON) {
+                 if(player.getItemInHand().getItemMeta().getDisplayName().equalsIgnoreCase(mColor + "Your Statistics")) {
+                    if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
+                        player.performCommand("stats");
                     }
                 }
             }
@@ -178,6 +200,13 @@ public class PlayerInteractListener implements Listener {
                     event.setCancelled(true);
                 } else if(event.getClickedInventory().getName().contains(sColor + "Stats")) {
                     event.setCancelled(true);
+                }
+
+                if(event.getCurrentItem().getType() == Material.BOOK || event.getCurrentItem().getType() == Material.BEACON ||
+                        event.getCurrentItem().getType() == Material.PAPER) {
+                    if(!(game.getGameStateManager().getCurrentGameState() instanceof IngameState)) {
+                        event.setCancelled(true);
+                    }
                 }
 
                 if(event.getCurrentItem().getType() == Material.SKULL_ITEM) {

@@ -14,13 +14,13 @@ import java.util.UUID;
 
 public class LimitationsListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private HashMap<UUID, Integer> diamondsMined = new HashMap<>();
-    private HashMap<UUID, Integer> goldMined = new HashMap<>();
-    private HashMap<UUID, Integer> ironMined = new HashMap<>();
+    private final HashMap<UUID, Integer> diamondsMined = new HashMap<>();
+    private final HashMap<UUID, Integer> goldMined = new HashMap<>();
+    private final HashMap<UUID, Integer> ironMined = new HashMap<>();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {

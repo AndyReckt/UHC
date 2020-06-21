@@ -13,12 +13,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class LongShotsListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @EventHandler
     public void handleEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {

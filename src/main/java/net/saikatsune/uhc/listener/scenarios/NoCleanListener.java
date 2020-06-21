@@ -17,11 +17,11 @@ import java.util.UUID;
 
 public class NoCleanListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private ArrayList<UUID> noCleanPlayers = new ArrayList<>();
+    private final ArrayList<UUID> noCleanPlayers = new ArrayList<>();
 
     @EventHandler
     public void handlePlayerDeathEvent(PlayerDeathEvent event) {
@@ -33,7 +33,6 @@ public class NoCleanListener implements Listener {
                 if(killer != null) {
                     noCleanPlayers.add(killer.getUniqueId());
                     killer.sendMessage(prefix + ChatColor.GREEN + "[NoClean] You are now protected to any damage for 20 seconds.");
-
                     new BukkitRunnable() {
                         @Override
                         public void run() {

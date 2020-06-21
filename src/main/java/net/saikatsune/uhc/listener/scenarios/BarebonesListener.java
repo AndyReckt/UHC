@@ -12,9 +12,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class BarebonesListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {

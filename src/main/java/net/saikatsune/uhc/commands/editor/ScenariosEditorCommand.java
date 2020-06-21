@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public class ScenariosEditorCommand implements CommandExecutor, Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

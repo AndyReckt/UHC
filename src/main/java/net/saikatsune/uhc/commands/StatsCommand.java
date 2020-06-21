@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 @SuppressWarnings("deprecation")
 public class StatsCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -22,18 +22,20 @@ public class StatsCommand implements CommandExecutor {
             if(sender instanceof Player) {
                 Player player = (Player) sender;
                 if(game.isDatabaseActive()) {
-                    if(args.length == 1) {
-                        OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
-                        if(game.getDatabaseManager().isPlayerRegistered(target)) {
-                            game.getInventoryHandler().handleStatsInventory(player, target);
+                    Bukkit.getScheduler().runTaskAsynchronously(game, () -> {
+                        if(args.length == 1) {
+                            OfflinePlayer target = Bukkit.getOfflinePlayer(args[0]);
+                            if(game.getDatabaseManager().isPlayerRegistered(target)) {
+                                game.getInventoryHandler().handleStatsInventory(player, target);
+                            } else {
+                                player.sendMessage(prefix + ChatColor.RED + target.getName() + " is not registered in the database.");
+                            }
+                        } else if(args.length == 0) {
+                            game.getInventoryHandler().handleStatsInventory(player, player);
                         } else {
-                            player.sendMessage(prefix + ChatColor.RED + target.getName() + " is not registered in the database!");
+                            player.sendMessage(ChatColor.RED + "Usage: /stats (player)");
                         }
-                    } else if(args.length == 0) {
-                        game.getInventoryHandler().handleStatsInventory(player, player);
-                    } else {
-                        player.sendMessage(ChatColor.RED + "Usage: /stats (player)");
-                    }
+                    });
                 } else {
                     player.sendMessage(prefix + ChatColor.RED + "Stats are currently disabled!");
                 }

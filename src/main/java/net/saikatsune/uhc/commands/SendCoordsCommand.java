@@ -13,12 +13,12 @@ import java.util.UUID;
 
 public class SendCoordsCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

@@ -6,10 +6,8 @@ import net.saikatsune.uhc.gamestate.states.EndingState;
 import net.saikatsune.uhc.gamestate.states.IngameState;
 import net.saikatsune.uhc.gamestate.states.LobbyState;
 import net.saikatsune.uhc.gamestate.states.ScatteringState;
-import net.saikatsune.uhc.handler.TeamHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,16 +16,11 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-
-import java.util.UUID;
 
 @SuppressWarnings("DuplicateCondition")
 public class ConnectionListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handlePlayerJoinEvent(PlayerJoinEvent event) {
@@ -40,16 +33,14 @@ public class ConnectionListener implements Listener {
         if(game.getGameStateManager().getCurrentGameState() instanceof LobbyState) {
             game.getGameManager().resetPlayer(player);
 
-            for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-                player.removePotionEffect(potionEffect.getType());
-            }
-
             try {
                 player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
             } catch (Exception exception) {
                 player.sendMessage(game.getPrefix() + ChatColor.RED + "There is no spawn-location set yet.");
                 player.sendMessage(game.getPrefix() + ChatColor.RED + "Use /setup to set it. It is needed to work properly.");
             }
+
+            game.getInventoryHandler().handleLobbyInventory(player);
 
             game.getTeamNumber().putIfAbsent(player.getUniqueId(), -1);
 
@@ -108,6 +99,9 @@ public class ConnectionListener implements Listener {
         if(game.isDatabaseActive()) {
             game.getDatabaseManager().registerPlayer(player);
         }
+
+        player.removePotionEffect(PotionEffectType.JUMP);
+        player.removePotionEffect(PotionEffectType.SLOW);
 
         game.getLoggedOutPlayers().remove(player.getUniqueId());
 

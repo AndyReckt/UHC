@@ -18,11 +18,11 @@ import java.util.*;
 @SuppressWarnings("deprecation")
 public class GameManager {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
+    private final String mColor = game.getmColor();
 
     private boolean whitelisted;
     private boolean teamGame;
@@ -190,6 +190,7 @@ public class GameManager {
     public void removeCombatVillager(UUID villagerUUID) {
         World uhcWorld = Bukkit.getWorld("uhc_world");
         World uhcNether = Bukkit.getWorld("uhc_nether");
+        World world = Bukkit.getWorld("world"); //Just to be sure xD
 
         for (Entity entity : uhcWorld.getEntities()) {
             if(entity instanceof Villager) {
@@ -200,6 +201,14 @@ public class GameManager {
         }
 
         for (Entity entity : uhcNether.getEntities()) {
+            if(entity instanceof Villager) {
+                if(entity.getUniqueId().equals(villagerUUID)) {
+                    entity.remove();
+                }
+            }
+        }
+
+        for (Entity entity : world.getEntities()) {
             if(entity instanceof Villager) {
                 if(entity.getUniqueId().equals(villagerUUID)) {
                     entity.remove();
@@ -362,6 +371,42 @@ public class GameManager {
             return (Player) Bukkit.getOnlinePlayers().toArray()[playerNumber];
         }
         return null;
+    }
+
+    public void disqualifyPlayer(OfflinePlayer offlinePlayer) {
+        try {
+            this.removeCombatVillager(game.getCombatVillagerUUID().get(offlinePlayer.getUniqueId()));
+        } catch (Exception ignored) {}
+
+        game.getLoggedPlayers().remove(offlinePlayer.getUniqueId());
+        game.getWhitelisted().remove(offlinePlayer.getUniqueId());
+        game.getPlayers().remove(offlinePlayer.getUniqueId());
+
+        game.getDeadPlayersByUUID().add(offlinePlayer.getUniqueId());
+
+        if(game.isDatabaseActive()) {
+            game.getDatabaseManager().addDeaths(offlinePlayer, 1);
+        }
+
+        if(this.isTeamGame()) {
+            this.removeDeadTeams();
+        }
+
+        Bukkit.broadcastMessage(ChatColor.RED + offlinePlayer.getName() + ChatColor.GRAY +
+                "[" + game.getPlayerKills().get(offlinePlayer.getUniqueId()) + "] " + ChatColor.YELLOW +
+                "was disconnected for too long and has been disqualified.");
+
+        game.getGameManager().checkWinner();
+    }
+
+    public double getKillDeathRatio(double kills, double deaths) {
+        if (kills != 0 && deaths == 0) {
+            return kills;
+        }
+        if (kills == 0 && deaths != 0) {
+            return 0;
+        }
+        return kills / deaths;
     }
 
     public void setWhitelisted(boolean whitelisted) {

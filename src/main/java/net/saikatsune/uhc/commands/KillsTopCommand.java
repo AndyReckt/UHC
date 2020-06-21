@@ -13,12 +13,12 @@ import java.util.*;
 
 public class KillsTopCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @Override
     public boolean onCommand(CommandSender player, Command cmd, String label, String[] args) {
@@ -30,8 +30,8 @@ public class KillsTopCommand implements CommandExecutor {
                 player.sendMessage("");
 
                 Map<UUID, Integer> unsortedkills = new HashMap<>();
-                for(Player allPlayers : Bukkit.getOnlinePlayers()) {
-                    unsortedkills.put(allPlayers.getUniqueId(), game.getPlayerKills().get(allPlayers.getUniqueId()));
+                for(UUID allPlayers : game.getPlayers()) {
+                    unsortedkills.put(allPlayers, game.getPlayerKills().get(allPlayers));
                 }
                 Map<UUID, Integer> kills = sortByValue(unsortedkills);
                 int x = 1;
@@ -39,7 +39,7 @@ public class KillsTopCommand implements CommandExecutor {
                     if(x != 11) {
                         UUID uuid = (UUID) object;
                         if(kills.get(uuid) != 0) {
-                            player.sendMessage(sColor + "- " + mColor + Bukkit.getOfflinePlayer(uuid).getName() + sColor + ": " + kills.get(uuid) + " kill(s)");
+                            player.sendMessage(sColor + "- " + mColor + Bukkit.getOfflinePlayer(uuid).getName() + sColor + ": " + kills.get(uuid) + " Kill(s)");
                         }
                         x++;
                     } else {

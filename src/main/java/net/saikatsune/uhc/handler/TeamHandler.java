@@ -10,17 +10,17 @@ import java.util.UUID;
 
 public class TeamHandler {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private UUID teamLeader;
+    private final UUID teamLeader;
 
-    private int teamNumber;
+    private final int teamNumber;
 
     private int kills = 0;
 
-    private List<UUID> teamMembers = new ArrayList<>();
+    private final List<UUID> teamMembers = new ArrayList<>();
 
-    private Inventory teamInventory = Bukkit.createInventory(null, 9*3, game.getmColor() + "Backpack");
+    private final Inventory teamInventory = Bukkit.createInventory(null, 9*3, game.getmColor() + "Backpack");
 
     public TeamHandler(int teamNumber, UUID teamLeader) {
         this.teamNumber = teamNumber;

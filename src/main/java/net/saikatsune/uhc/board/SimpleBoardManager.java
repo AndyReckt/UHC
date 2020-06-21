@@ -19,9 +19,9 @@ import java.util.UUID;
 
 public class SimpleBoardManager extends BukkitRunnable implements Listener {
 
-    private Game game;
+    private final Game game;
 
-    private Map<UUID, SimpleBoard> boards;
+    private final Map<UUID, SimpleBoard> boards;
     private BoardProvider boardProvider;
 
 
@@ -42,7 +42,7 @@ public class SimpleBoardManager extends BukkitRunnable implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void handlePlayerJoinEvent(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         SimpleBoard simpleBoard = boards.get(player.getUniqueId());
 
@@ -56,7 +56,7 @@ public class SimpleBoardManager extends BukkitRunnable implements Listener {
     }
 
     @EventHandler
-    public void onPlayerQuiteEvent(PlayerQuitEvent event) {
+    public void handlePlayerQuitEvent(PlayerQuitEvent event) {
         boards.remove(event.getPlayer().getUniqueId());
     }
 

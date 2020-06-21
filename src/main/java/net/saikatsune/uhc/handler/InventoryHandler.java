@@ -2,6 +2,7 @@ package net.saikatsune.uhc.handler;
 
 import net.saikatsune.uhc.Game;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.enchantments.Enchantment;
@@ -11,17 +12,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class InventoryHandler {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
-    private void fillEmptySlots(Inventory inventory) {
+    private final Inventory leaderboardsInventory = Bukkit.createInventory(null, 9*5, mColor + "Leaderboards");
+
+    public void fillEmptySlots(Inventory inventory) {
         for(int slot = 0; slot < inventory.getSize(); slot++) {
             if(inventory.getItem(slot) == null) {
                 inventory.setItem(slot, new ItemStack(Material.STAINED_GLASS_PANE));
@@ -173,16 +179,27 @@ public class InventoryHandler {
     }
 
     public void handleStatsInventory(Player player, OfflinePlayer toWatch) {
-        Inventory inventory = Bukkit.createInventory(null, 9*1, sColor + "Stats: " + mColor + toWatch.getName());
+        Inventory inventory = Bukkit.createInventory(null, 9, sColor + "Stats: " + mColor + toWatch.getName());
 
-        inventory.setItem(2, new ItemHandler(Material.IRON_SWORD).setDisplayName(mColor + "Kills: " + sColor +
-                game.getDatabaseManager().getKills(toWatch)).build());
+        int kills = game.getDatabaseManager().getKills(toWatch);
+        int deaths = game.getDatabaseManager().getDeaths(toWatch);
+        int totalGames = game.getDatabaseManager().getDeaths(toWatch) + game.getDatabaseManager().getWins(toWatch);
 
-        inventory.setItem(4, new ItemHandler(Material.FIREBALL).setDisplayName(mColor + "Deaths: " + sColor +
-                game.getDatabaseManager().getDeaths(toWatch)).build());
+        inventory.setItem(0, new ItemHandler(Material.IRON_SWORD).setDisplayName(mColor + "Kills: " + sColor +
+                kills).build());
 
-        inventory.setItem(6, new ItemHandler(Material.NETHER_STAR).setDisplayName(mColor + "Wins: " + sColor +
+        inventory.setItem(1, new ItemHandler(Material.FIREBALL).setDisplayName(mColor + "Deaths: " + sColor +
+                deaths).build());
+
+        inventory.setItem(2, new ItemHandler(Material.NETHER_STAR).setDisplayName(mColor + "Wins: " + sColor +
                 game.getDatabaseManager().getWins(toWatch)).build());
+
+        inventory.setItem(5, new ItemHandler(Material.WATCH).setDisplayName(mColor + "Games Played: " + sColor +
+                totalGames).build());
+
+        inventory.setItem(8, new ItemHandler(Material.BEACON).setDisplayName(mColor + "KDR: " + sColor +
+                new DecimalFormat("##.##").format(game.getGameManager().getKillDeathRatio(Double.parseDouble(String.valueOf(kills)),
+                        Double.parseDouble(String.valueOf(deaths))))).build());
 
         this.fillEmptySlots(inventory);
 
@@ -226,14 +243,102 @@ public class InventoryHandler {
 
         inventory.setItem(0, new ItemHandler(Material.IRON_SWORD).addEnchantment(Enchantment.DAMAGE_ALL, 1).build());
         inventory.setItem(1, new ItemStack(Material.FISHING_ROD));
-        inventory.setItem(2, new ItemHandler(Material.BOW).addEnchantment(Enchantment.ARROW_INFINITE, 1).build());
+        inventory.setItem(2, new ItemHandler(Material.BOW).build());
 
         inventory.setHelmet(new ItemHandler(Material.IRON_HELMET).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
         inventory.setChestplate(new ItemHandler(Material.IRON_CHESTPLATE).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
         inventory.setLeggings(new ItemHandler(Material.IRON_LEGGINGS).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
         inventory.setBoots(new ItemHandler(Material.IRON_BOOTS).addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1).build());
 
-        inventory.setItem(8, new ItemStack(Material.ARROW));
+        inventory.setItem(8, new ItemStack(Material.ARROW, 16));
+    }
+
+    public void setupLeaderboardsInventory() {
+        Inventory inventory = leaderboardsInventory;
+
+        List<String> sorted10KillsPlayers = new ArrayList<>();
+        List<String> sorted10DeathPlayers = new ArrayList<>();
+        List<String> sorted10WinPlayers = new ArrayList<>();
+
+        inventory.setItem(4, new ItemHandler(Material.BEACON).setDisplayName(mColor + "UHC LEADERBOARDS").build());
+
+        for (int i = 0; i < 10; i++) {
+            int place = i + 1;
+
+            if(!game.getDatabaseManager().getTop10KillPlayers().get(i).contains("Not available.")) {
+                sorted10KillsPlayers.add(ChatColor.WHITE + "" + place + ". - " + mColor + game.getDatabaseManager().getTop10KillPlayers().get(i) + ": " +
+                        sColor + game.getDatabaseManager().getKills(Bukkit.getOfflinePlayer(game.getDatabaseManager().getTop10KillPlayers().get(i))));
+            } else {
+                sorted10KillsPlayers.add(ChatColor.WHITE + "" + place + ". - " + mColor + game.getDatabaseManager().getTop10KillPlayers().get(i));
+            }
+
+            if(!game.getDatabaseManager().getTop10DeathPlayers().get(i).contains("Not available.")) {
+                sorted10DeathPlayers.add(ChatColor.WHITE + "" + place + ". - " + mColor + game.getDatabaseManager().getTop10DeathPlayers().get(i) + ": " +
+                        sColor + game.getDatabaseManager().getDeaths(Bukkit.getOfflinePlayer(game.getDatabaseManager().getTop10DeathPlayers().get(i))));
+            } else {
+                sorted10DeathPlayers.add(ChatColor.WHITE + "" + place + ". - " + mColor + game.getDatabaseManager().getTop10DeathPlayers().get(i));
+            }
+
+            if(!game.getDatabaseManager().getTop10WinPlayers().get(i).contains("Not available.")) {
+                sorted10WinPlayers.add(ChatColor.WHITE + "" + place + ". - " + mColor + game.getDatabaseManager().getTop10WinPlayers().get(i) + ": " +
+                        sColor + game.getDatabaseManager().getWins(Bukkit.getOfflinePlayer(game.getDatabaseManager().getTop10WinPlayers().get(i))));
+            } else {
+                sorted10WinPlayers.add(ChatColor.WHITE + "" + place + ". - " + mColor + game.getDatabaseManager().getTop10WinPlayers().get(i));
+            }
+        }
+
+        inventory.setItem(11, new ItemHandler(Material.IRON_SWORD).setDisplayName(mColor + "Top 10 Kills").setLore(ChatColor.GRAY + "§m----------------------",
+                sorted10KillsPlayers.get(0), sorted10KillsPlayers.get(1), sorted10KillsPlayers.get(2),
+                sorted10KillsPlayers.get(3), sorted10KillsPlayers.get(4), sorted10KillsPlayers.get(5),
+                sorted10KillsPlayers.get(6), sorted10KillsPlayers.get(7), sorted10KillsPlayers.get(8),
+                sorted10KillsPlayers.get(9), ChatColor.GRAY + "§m----------------------").build());
+
+        inventory.setItem(15, new ItemHandler(Material.FIREBALL).setDisplayName(mColor + "Top 10 Deaths").setLore(ChatColor.GRAY + "§m----------------------",
+                sorted10DeathPlayers.get(0), sorted10DeathPlayers.get(1), sorted10DeathPlayers.get(2),
+                sorted10DeathPlayers.get(3), sorted10DeathPlayers.get(4), sorted10DeathPlayers.get(5),
+                sorted10DeathPlayers.get(6), sorted10DeathPlayers.get(7), sorted10DeathPlayers.get(8),
+                sorted10DeathPlayers.get(9), ChatColor.GRAY + "§m----------------------").build());
+
+        inventory.setItem(31, new ItemHandler(Material.NETHER_STAR).setDisplayName(mColor + "Top 10 Wins").setLore(ChatColor.GRAY + "§m----------------------",
+                sorted10WinPlayers.get(0), sorted10WinPlayers.get(1), sorted10WinPlayers.get(2),
+                sorted10WinPlayers.get(3), sorted10WinPlayers.get(4), sorted10WinPlayers.get(5),
+                sorted10WinPlayers.get(6), sorted10WinPlayers.get(7), sorted10WinPlayers.get(8),
+                sorted10WinPlayers.get(9), ChatColor.GRAY + "§m----------------------").build());
+
+        inventory.setItem(44, new ItemHandler(Material.PAPER).setDisplayName(sColor + "Leaderboards update after the game has finished.").build());
+
+        this.fillEmptySlots(inventory);
+    }
+
+    public void handleLeaderboardsInventory(Player player) {
+        player.openInventory(leaderboardsInventory);
+    }
+
+    public void handleDisqualifyInventory(Player player) {
+        Inventory inventory = Bukkit.createInventory(null, 9*5, mColor + "Disqualify a player.");
+
+        for (UUID allPlayers : game.getPlayers()) {
+            if(!Bukkit.getOfflinePlayer(allPlayers).isOnline()) {
+                ItemStack playerStack = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+                SkullMeta playersMeta = (SkullMeta) playerStack.getItemMeta();
+                playersMeta.setOwner(Bukkit.getOfflinePlayer(allPlayers).getName());
+                playersMeta.setDisplayName(Bukkit.getOfflinePlayer(allPlayers).getName());
+                playerStack.setItemMeta(playersMeta);
+                inventory.addItem(playerStack);
+            }
+        }
+
+        player.openInventory(inventory);
+    }
+
+    public void handleLobbyInventory(Player player) {
+        Inventory inventory = player.getInventory();
+
+        inventory.clear();
+
+        inventory.setItem(2, new ItemHandler(Material.BOOK).setDisplayName(mColor + "Game Configuration").build());
+        inventory.setItem(4, new ItemHandler(Material.BEACON).setDisplayName(mColor + "Your Statistics").build());
+        inventory.setItem(6, new ItemHandler(Material.PAPER).setDisplayName(mColor + "Game Scenarios").build());
     }
 
 }

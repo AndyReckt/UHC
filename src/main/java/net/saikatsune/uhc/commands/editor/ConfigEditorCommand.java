@@ -16,12 +16,12 @@ import java.sql.SQLException;
 
 public class ConfigEditorCommand implements CommandExecutor, Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -135,6 +135,16 @@ public class ConfigEditorCommand implements CommandExecutor, Listener {
                                 game.getDatabaseManager().createTable();
                                 game.setDatabaseActive(true);
                                 Bukkit.broadcastMessage(prefix + mColor + "Stats" + sColor + " are now " + ChatColor.GREEN + "enabled" + sColor + "!");
+
+                                Bukkit.broadcastMessage(prefix + sColor + "Setting up leaderboards...");
+
+                                game.getDatabaseManager().getTop10Kills();
+                                game.getDatabaseManager().getTop10Deaths();
+                                game.getDatabaseManager().getTop10Wins();
+
+                                game.getInventoryHandler().setupLeaderboardsInventory();
+
+                                Bukkit.broadcastMessage(prefix + ChatColor.GREEN + "Leaderboards have been successfully setup.");
                             } catch (SQLException e) {
                                 player.sendMessage(prefix + ChatColor.RED + "Cannot create tables... The database might not be connected.");
                             }

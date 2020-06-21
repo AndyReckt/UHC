@@ -7,7 +7,7 @@ import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings("deprecation")
-public class PlayerCraftListener implements Listener {
+public class ItemCraftListener implements Listener {
 
     @EventHandler
     public void handlePlayerCraftEvent(PrepareItemCraftEvent event) {

@@ -11,8 +11,8 @@ import java.util.List;
 
 public class ItemHandler {
 
-    private ItemStack itemStack;
-    private ItemMeta itemMeta;
+    private final ItemStack itemStack;
+    private final ItemMeta itemMeta;
 
     public ItemHandler(ItemStack itemStack) {
         this.itemStack = itemStack;

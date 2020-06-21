@@ -13,9 +13,9 @@ import java.util.UUID;
 
 public class IngameState extends GameState {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     public void start() {
         game.getWorldManager().createBorderLayer("uhc_world", game.getConfigManager().getBorderSize(),4, null);

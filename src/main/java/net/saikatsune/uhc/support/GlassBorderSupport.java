@@ -18,10 +18,11 @@ import java.util.WeakHashMap;
 
 public class GlassBorderSupport implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private Map<Player, List<Location>> players = new WeakHashMap();
-    private byte color = 14;
+    private final String prefix = game.getPrefix();
+
+    private final Map<Player, List<Location>> players = new WeakHashMap();
 
     private static boolean isInBetween(int xone, int xother, int mid) {
         int distance = Math.abs(xone - xother);
@@ -48,7 +49,7 @@ public class GlassBorderSupport implements Listener {
             if (Math.abs(to.getBlockX()) > game.getConfigManager().getBorderSize() || Math.abs(to.getBlockZ())
                     > game.getConfigManager().getBorderSize()) {
                 event.setCancelled(true);
-                event.getPlayer().sendMessage(ChatColor.RED + "You can't pearl to outside of the border.");
+                event.getPlayer().sendMessage(prefix + ChatColor.RED + "You can't pearl to outside of the border.");
                 return;
             }
             handlePlayerMovement(event);
@@ -131,18 +132,19 @@ public class GlassBorderSupport implements Listener {
 
     @SuppressWarnings("deprecation")
     public void updateGlass(Player player, List<Location> toUpdate) {
+        byte color = 14;
         if (this.players.containsKey(player)) {
             for (Location location : players.get(player)) {
                 Block block = location.getBlock();
                 player.sendBlockChange(location, block.getTypeId(), block.getData());
             }
             for (Location location2 : toUpdate) {
-                player.sendBlockChange(location2, 95, this.color);
+                player.sendBlockChange(location2, 95, color);
             }
             this.players.put(player, toUpdate);
         } else {
             for (Location location2 : toUpdate) {
-                player.sendBlockChange(location2, 95, this.color);
+                player.sendBlockChange(location2, 95, color);
             }
             this.players.put(player, toUpdate);
         }

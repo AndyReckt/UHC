@@ -15,9 +15,9 @@ import org.bukkit.inventory.ItemStack;
 
 public class SwordlessListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @EventHandler
     public void handlePlayerCraftEvent(PrepareItemCraftEvent event) {

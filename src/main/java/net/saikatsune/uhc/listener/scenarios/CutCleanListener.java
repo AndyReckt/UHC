@@ -2,9 +2,8 @@ package net.saikatsune.uhc.listener.scenarios;
 
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.enums.Scenarios;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import net.saikatsune.uhc.enums.ServerVersion;
+import org.bukkit.*;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,12 +11,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 public class CutCleanListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {
@@ -32,6 +32,12 @@ public class CutCleanListener implements Listener {
 
             if (event.isCancelled()) return;
 
+            Location clone = new Location(event.getBlock().getWorld(),
+                    event.getBlock().getLocation().getBlockX() + 0.5D, event.getBlock().getLocation().getBlockY(),
+                    event.getBlock().getLocation().getBlockZ() + 0.5D);
+
+            Location legacy = event.getBlock().getLocation();
+
             switch (event.getBlock().getType()) {
                 case IRON_ORE:
                     if ((player.getItemInHand().getType() != Material.DIAMOND_PICKAXE) && (player.getItemInHand().getType() != Material.IRON_PICKAXE) &&
@@ -41,13 +47,24 @@ public class CutCleanListener implements Listener {
                     }
                     if(!Scenarios.VeinMiner.isEnabled()) {
                         event.getBlock().setType(Material.AIR);
+                        event.getBlock().getState().update();
                         if(!Scenarios.Limitations.isEnabled()) {
-                            if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
-                            } else if(Scenarios.DoubleOres.isEnabled()) {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 2));
-                            } else {
-                                event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 3));
+                            if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_8_X.toString())) {
+                                if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.IRON_INGOT));
+                                } else if(Scenarios.DoubleOres.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.IRON_INGOT, 2));
+                                } else {
+                                    event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.IRON_INGOT, 3));
+                                }
+                            } else if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_7_X.toString())) {
+                                if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.IRON_INGOT));
+                                } else if(Scenarios.DoubleOres.isEnabled()) {
+                                    event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.IRON_INGOT, 2));
+                                } else {
+                                    event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.IRON_INGOT, 3));
+                                }
                             }
                         } else {
                             game.getLimitationsListener().getIronMined().putIfAbsent(player.getUniqueId(), 0);
@@ -56,17 +73,27 @@ public class CutCleanListener implements Listener {
                                 player.sendMessage(prefix + ChatColor.RED + "You can only mine 64 iron!");
                                 return;
                             } else if(game.getLimitationsListener().getIronMined().get(player.getUniqueId()) < 64) {
-                                if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
-                                } else if(Scenarios.DoubleOres.isEnabled()) {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 2));
-                                } else {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.IRON_INGOT, 3));
+                                if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_8_X.toString())) {
+                                    if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                        event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.IRON_INGOT));
+                                    } else if(Scenarios.DoubleOres.isEnabled()) {
+                                        event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.IRON_INGOT, 2));
+                                    } else {
+                                        event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.IRON_INGOT, 3));
+                                    }
+                                } else if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_7_X.toString())) {
+                                    if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                        event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.IRON_INGOT));
+                                    } else if(Scenarios.DoubleOres.isEnabled()) {
+                                        event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.IRON_INGOT, 2));
+                                    } else {
+                                        event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.IRON_INGOT, 3));
+                                    }
                                 }
                                 game.getLimitationsListener().getIronMined().put(player.getUniqueId(), game.getLimitationsListener().getIronMined().get(player.getUniqueId()) + 1);
                             }
                         }
-                        event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(2);
+                        event.getBlock().getWorld().spawn(clone, ExperienceOrb.class).setExperience(2);
                     }
                     break;
                 case GOLD_ORE:
@@ -75,39 +102,62 @@ public class CutCleanListener implements Listener {
                         return;
                     }
                     if(!Scenarios.VeinMiner.isEnabled()) {
-                        event.getBlock().setType(Material.AIR);
-                        if(!Scenarios.Limitations.isEnabled()) {
-                            if(!Scenarios.Barebones.isEnabled()) {
-                                if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
-                                } else if(Scenarios.DoubleOres.isEnabled()) {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
+                        if(!Scenarios.Goldless.isEnabled()) {
+                            event.getBlock().setType(Material.AIR);
+                            event.getBlock().getState().update();
+                            if(!Scenarios.Limitations.isEnabled()) {
+                                if(!Scenarios.Barebones.isEnabled()) {
+                                    if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_8_X.toString())) {
+                                        if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.GOLD_INGOT));
+                                        } else if(Scenarios.DoubleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.GOLD_INGOT, 2));
+                                        } else {
+                                            event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.GOLD_INGOT, 3));
+                                        }
+                                    } else if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_7_X.toString())) {
+                                        if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.GOLD_INGOT));
+                                        } else if(Scenarios.DoubleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.GOLD_INGOT, 2));
+                                        } else {
+                                            event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.GOLD_INGOT, 3));
+                                        }
+                                    }
                                 } else {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                                    event.getBlock().setType(Material.AIR);
+                                    player.sendMessage(prefix + ChatColor.RED + "You can only mine iron!");
+                                    return;
                                 }
                             } else {
-                                event.getBlock().setType(Material.AIR);
-                                player.sendMessage(prefix + ChatColor.RED + "You can only mine iron!");
-                                return;
-                            }
-                        } else {
-                            game.getLimitationsListener().getGoldMined().putIfAbsent(player.getUniqueId(), 0);
-                            if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) >= 32) {
-                                event.getBlock().setType(Material.AIR);
-                                player.sendMessage(prefix + ChatColor.RED + "You can only mine 32 gold!");
-                                return;
-                            } else if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) < 32) {
-                                if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
-                                } else if(Scenarios.DoubleOres.isEnabled()) {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 2));
-                                } else {
-                                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT, 3));
+                                game.getLimitationsListener().getGoldMined().putIfAbsent(player.getUniqueId(), 0);
+                                if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) >= 32) {
+                                    event.getBlock().setType(Material.AIR);
+                                    player.sendMessage(prefix + ChatColor.RED + "You can only mine 32 gold!");
+                                    return;
+                                } else if(game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) < 32) {
+                                    if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_8_X.toString())) {
+                                        if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.GOLD_INGOT));
+                                        } else if(Scenarios.DoubleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.GOLD_INGOT, 2));
+                                        } else {
+                                            event.getBlock().getWorld().dropItemNaturally(clone, new ItemStack(Material.GOLD_INGOT, 3));
+                                        }
+                                    } else if(game.getServerVersion().equalsIgnoreCase(ServerVersion.V1_7_X.toString())) {
+                                        if((!Scenarios.DoubleOres.isEnabled()) && !Scenarios.TripleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.GOLD_INGOT));
+                                        } else if(Scenarios.DoubleOres.isEnabled()) {
+                                            event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.GOLD_INGOT, 2));
+                                        } else {
+                                            event.getBlock().getWorld().dropItemNaturally(legacy, new ItemStack(Material.GOLD_INGOT, 3));
+                                        }
+                                    }
+                                    game.getLimitationsListener().getGoldMined().put(player.getUniqueId(), game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) + 1);
                                 }
-                                game.getLimitationsListener().getGoldMined().put(player.getUniqueId(), game.getLimitationsListener().getGoldMined().get(player.getUniqueId()) + 1);
                             }
+                            event.getBlock().getWorld().spawn(clone, ExperienceOrb.class).setExperience(4);
                         }
-                        event.getBlock().getWorld().spawn(event.getBlock().getLocation(), ExperienceOrb.class).setExperience(4);
                     }
                     break;
             }
@@ -137,6 +187,10 @@ public class CutCleanListener implements Listener {
                 case SHEEP:
                     event.getDrops().clear();
                     event.getDrops().add(new ItemStack(Material.LEATHER, 1));
+                    break;
+                case RABBIT:
+                    event.getDrops().clear();
+                    event.getDrops().add(new ItemStack(Material.COOKED_RABBIT, 1));
                     break;
             }
         }

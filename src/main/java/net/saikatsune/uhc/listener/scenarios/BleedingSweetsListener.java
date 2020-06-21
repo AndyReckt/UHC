@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BleedingSweetsListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handlePlayerDeathEvent(PlayerDeathEvent event) {
@@ -20,10 +20,10 @@ public class BleedingSweetsListener implements Listener {
 
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(Scenarios.BleedingSweets.isEnabled()) {
-                dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.DIAMOND));
-                dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.GOLD_INGOT, 5));
-                dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.ARROW, 16));
-                dyingPlayer.getWorld().dropItemNaturally(dyingPlayer.getLocation(), new ItemStack(Material.STRING));
+                dyingPlayer.getWorld().dropItem(dyingPlayer.getLocation(), new ItemStack(Material.DIAMOND));
+                dyingPlayer.getWorld().dropItem(dyingPlayer.getLocation(), new ItemStack(Material.GOLD_INGOT, 5));
+                dyingPlayer.getWorld().dropItem(dyingPlayer.getLocation(), new ItemStack(Material.ARROW, 16));
+                dyingPlayer.getWorld().dropItem(dyingPlayer.getLocation(), new ItemStack(Material.STRING));
             }
         }
     }

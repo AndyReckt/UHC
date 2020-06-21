@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class FirelessListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handleEntityDamageEvent(EntityDamageEvent event) {

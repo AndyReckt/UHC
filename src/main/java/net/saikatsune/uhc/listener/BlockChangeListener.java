@@ -7,9 +7,11 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.saikatsune.uhc.Game;
 import net.saikatsune.uhc.gamestate.states.IngameState;
+import net.saikatsune.uhc.populators.CanePopulator;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,16 +19,19 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class BlockChangeListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
+
+    private final boolean populateSugarcane = game.getConfig().getBoolean("POPULATORS.SUGARCANE.ENABLED");
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {
@@ -89,7 +94,7 @@ public class BlockChangeListener implements Listener {
                 switch (event.getBlockPlaced().getType()) {
                     case FIRE:
                         event.setCancelled(true);
-                        player.sendMessage(prefix + ChatColor.RED + "You are not allowed to place lava or fire " +
+                        player.sendMessage(prefix + ChatColor.RED + "You are not allowed to place or fire " +
                                 "in grace period to prevent iPvP.");
                     break;
                 }
@@ -133,4 +138,12 @@ public class BlockChangeListener implements Listener {
         event.setCancelled(true);
     }
 
+    @EventHandler
+    public void handleWorldInitiateEvent(WorldInitEvent event) {
+        World world = event.getWorld();
+
+        if(populateSugarcane) {
+            world.getPopulators().add(new CanePopulator());
+        }
+    }
 }

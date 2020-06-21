@@ -14,10 +14,10 @@ import java.util.List;
 
 public class ScoreboardManager {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private File scoreboardsFile = new File(game.getDataFolder(), "scoreboards.yml");
-    private FileConfiguration config = YamlConfiguration.loadConfiguration(scoreboardsFile);
+    private final File scoreboardsFile = new File(game.getDataFolder(), "scoreboards.yml");
+    private final FileConfiguration config = YamlConfiguration.loadConfiguration(scoreboardsFile);
 
     public File getScoreboardsFile() {
         return scoreboardsFile;

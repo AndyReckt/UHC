@@ -17,7 +17,7 @@ import java.util.TimeZone;
 
 public class UHCBoardProvider implements BoardProvider {
 
-    private Game game;
+    private final Game game;
 
     public UHCBoardProvider(Game game) {
         this.game = game;

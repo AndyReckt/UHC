@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 public class ScatteringState extends GameState {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     public void start() {
 

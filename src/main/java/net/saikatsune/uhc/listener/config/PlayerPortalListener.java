@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class PlayerPortalListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @EventHandler
     public void handlePlayerPortalEvent(PlayerPortalEvent event) {

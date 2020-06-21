@@ -41,7 +41,6 @@ public class HasteyBoysListener implements Listener {
             if(enchantmentList.contains(event.getRecipe().getResult().getType())) {
                 ItemStack newItem = new ItemStack(event.getRecipe().getResult().getType());
                 newItem.addEnchantment(Enchantment.DIG_SPEED, 3);
-                newItem.addEnchantment(Enchantment.DURABILITY, 3);
                 event.getInventory().setResult(newItem);
             }
         }

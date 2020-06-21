@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class BowlessListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {

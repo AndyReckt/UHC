@@ -12,7 +12,7 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 
 public class PlayerExitVehicleListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handleVehicleExitEvent(VehicleExitEvent event) {

@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 
 public class ConfigCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @Override
     public boolean onCommand(CommandSender player, Command cmd, String label, String[] args) {

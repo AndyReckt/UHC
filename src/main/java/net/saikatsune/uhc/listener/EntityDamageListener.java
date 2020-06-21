@@ -29,12 +29,12 @@ import java.util.UUID;
 
 public class EntityDamageListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     @EventHandler
     public void handleEntityDamageEvent(EntityDamageEvent event) {
@@ -87,9 +87,14 @@ public class EntityDamageListener implements Listener {
                         game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getUniqueId())).setKills(teamKills + 1);
                     }
 
-                    Bukkit.broadcastMessage(ChatColor.RED + villager.getCustomName() + ChatColor.YELLOW + " was slain " +
-                            "by " + ChatColor.RED + player.getName() + ChatColor.GRAY + "[" + game.getPlayerKills().get(player.getUniqueId())
-                            + "].");
+                    if(game.isDatabaseActive()) {
+                        game.getDatabaseManager().addKills(player, 1);
+                    }
+
+                    Bukkit.broadcastMessage(ChatColor.RED + villager.getCustomName() + ChatColor.GRAY + "[" +
+                            game.getPlayerKills().get(dyingPlayer.getUniqueId()) + "]" + ChatColor.YELLOW + " was slain " +
+                            "by " + ChatColor.RED + player.getName() + ChatColor.GRAY + "[" +
+                            game.getPlayerKills().get(player.getUniqueId()) + "].");
 
                     for (UUID villagerKey : game.getCombatVillagerUUID().keySet()) {
                         //player.setLevel(player.getLevel() + game.getDeathLevels().get(villagerConnectedToPlayer.getUniqueId()));
@@ -97,29 +102,31 @@ public class EntityDamageListener implements Listener {
                         try {
                             game.getGameManager().dropPlayerDeathInventory(dyingPlayer.getUniqueId(), player);
 
+                            game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
+                              game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemHandler(Material.GOLDEN_APPLE).setDisplayName(
+                                      ChatColor.GOLD + "Golden Head").build());
+
                             if(Scenarios.BleedingSweets.isEnabled()) {
-                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
-                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 5));
-                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.ARROW, 16));
-                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.STRING));
                             }
 
                             if(Scenarios.Goldless.isEnabled()) {
-                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.GOLD_INGOT, 8));
                             }
 
                             if(Scenarios.Diamondless.isEnabled()) {
-                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItemNaturally(
+                                game.getDeathLocation().get(dyingPlayer.getUniqueId()).getWorld().dropItem(
                                         game.getDeathLocation().get(dyingPlayer.getUniqueId()), new ItemStack(Material.DIAMOND));
                             }
-                        } catch (Exception ignored) {
-
-                        }
+                        } catch (Exception ignored) {}
 
                         game.getLoggedPlayers().remove(dyingPlayer.getUniqueId());
                         game.getWhitelisted().remove(dyingPlayer.getUniqueId());
@@ -282,11 +289,15 @@ public class EntityDamageListener implements Listener {
             if(player.getKiller() != null) {
                 game.getPlayerKills().put(player.getKiller().getUniqueId(), game.getPlayerKills().get(player.getKiller().getUniqueId()) + 1);
 
-                if(game.getGameManager().isTeamGame()) {
-                    int teamKills = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getKiller().getUniqueId())).getKills();
+                try {
+                    if(game.getGameManager().isTeamGame()) {
+                        if(game.getTeamNumber().get(player.getKiller().getUniqueId()) != -1) {
+                            int teamKills = game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getKiller().getUniqueId())).getKills();
 
-                    game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getKiller().getUniqueId())).setKills(teamKills + 1);
-                }
+                            game.getTeamManager().getTeams().get(game.getTeamNumber().get(player.getKiller().getUniqueId())).setKills(teamKills + 1);
+                        }
+                    }
+                } catch (Exception ignored) {}
 
                 if(game.isDatabaseActive()) {
                     game.getDatabaseManager().addKills(player.getKiller(), 1);
@@ -325,7 +336,7 @@ public class EntityDamageListener implements Listener {
                     if(player.hasPermission("uhc.host")) {
                         game.getInventoryHandler().handleStaffInventory(player);
                     } else {
-                        player.getInventory().addItem(new ItemStack(Material.COMPASS));
+                        player.getInventory().addItem(new ItemStack(Material.COMPASS)); //Create spec inv handler
                     }
 
                     if(game.isDatabaseActive()) {

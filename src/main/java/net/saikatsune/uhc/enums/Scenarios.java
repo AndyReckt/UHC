@@ -17,7 +17,7 @@ import java.util.UUID;
 public enum Scenarios {
 
     CutClean(false, new ItemHandler(Material.IRON_ORE).setDisplayName("§bCutClean").build(), new String[]{"Food and ores are pre-smelted, removing", "the needs of furnaces."}),
-    TimeBomb(false, new ItemHandler(Material.TNT).setDisplayName("§bTimeBomb").build(), new String[]{"When you kill a player, a chest appears", "containing his drops. After 30 ", "seconds this chest will explode."}),
+    TimeBomb(false, new ItemHandler(Material.TNT).setDisplayName("§bTimeBomb").build(), new String[]{"When you kill a player, a chest appears", "containing their drops. After 30 ", "seconds this chest will explode."}),
     Timber(false, new ItemHandler(Material.SAPLING).setDisplayName("§bTimber").build(), new String[]{"The whole tree drops when you mine a log."}),
     NoClean(false, new ItemHandler(Material.DIAMOND_SWORD).setDisplayName("§bNoClean").build(), new String[]{"When you kill a player you get 20", " seconds of invincibility."}),
     Limitations(false, new ItemHandler(Material.REDSTONE_BLOCK).setDisplayName("§bLimitations").build(), new String[]{"You can only mine up to 16 diamonds, ", "32 gold, and 64 iron during the game."}),
@@ -39,7 +39,7 @@ public enum Scenarios {
     Rodless(false, new ItemHandler(Material.FISHING_ROD).setDisplayName("§bRodless").build(), new String[]{"You cannot use rods."}),
     WebCage(false, new ItemHandler(Material.WEB).setDisplayName("§bWebcage").build(), new String[]{"When you kill a player a sphere of", " cobwebs surrounds you"}),
     LuckyLeaves(false, new ItemHandler(Material.LEAVES).setDisplayName("§bLuckyLeaves").build(), new String[]{"There's a 0.5% chance of golden apples, ", "dropping from decaying leaves"}),
-    Fireless(false, new ItemHandler(Material.FIRE).setDisplayName("§bFireless").build(), new String[]{"You take no fire damage."}),
+    Fireless(false, new ItemHandler(Material.FLINT_AND_STEEL).setDisplayName("§bFireless").build(), new String[]{"You take no fire damage."}),
     OreFrenzy(false, new ItemHandler(Material.NETHER_STAR).setDisplayName("§bOreFrenzy").build(), new String[]{"Mining lapis ore will get you a splash potion of healing.", "Mining emeralds will get you 32 arrows.", "Mining redstone ore will get you a book.", "Mining diamond ore will get you a diamond 4 xp bottles.", "Mining quartz will get you a block of TNT."}),
     BleedingSweets(false, new ItemHandler(Material.DIAMOND).setDisplayName("§bBleedingSweets").build(), new String[]{"When a player dies, they will drop ", "1 diamond, 5 gold ingots, 16 arrows and 1 string."}),
     Switcheroo(false, new ItemHandler(Material.ENDER_PEARL).setDisplayName("§bSwitcheroo").build(), new String[]{"When you shoot someone, you trade places with them."}),
@@ -48,17 +48,18 @@ public enum Scenarios {
     Absorptionless(false, new ItemHandler(Material.GLOWSTONE_DUST).setDisplayName("§bAbsorptionless").build(), new String[]{"You do not receive absorption", "hearts after eating a", "golden apple."}),
     VeinMiner(false, new ItemHandler(Material.IRON_PICKAXE).setDisplayName("§bVeinMiner").build(), new String[]{"Mine all blocks in a vein, ", "when sneaking."}),
     BetaZombies(false, new ItemHandler(Material.ROTTEN_FLESH).setDisplayName("§bBetaZombies").build(), new String[]{"Zombies drop feathers."}),
-    Swordless(false, new ItemHandler(Material.WOOD_SWORD).setDisplayName("§bSwordless").build(), new String[]{"You cannot craft/use swords."});
+    Swordless(false, new ItemHandler(Material.WOOD_SWORD).setDisplayName("§bSwordless").build(), new String[]{"You cannot craft/use swords."}),
+    SafeLoot(false, new ItemHandler(Material.CHEST).setDisplayName("§bSafeLoot").build(), new String[]{"When a player dies, a chest appears", "containing their loot.", "Only the killer or their team", "can access the loot.", "After 30 seconds, the", "chest will explode."});
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
-    private String mColor = game.getmColor();
-    private String sColor = game.getsColor();
+    private final String prefix = game.getPrefix();
+    private final String mColor = game.getmColor();
+    private final String sColor = game.getsColor();
 
     private boolean enabled;
-    private ItemStack scenarioItem;
-    private String[] scenarioExplanation;
+    private final ItemStack scenarioItem;
+    private final String[] scenarioExplanation;
 
     Scenarios(boolean enabled, ItemStack scenarioItem, String[] scenarioExplanation) {
         this.enabled = enabled;

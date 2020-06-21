@@ -1,90 +1,65 @@
 package net.saikatsune.uhc.populators;
 
 import net.saikatsune.uhc.Game;
-import net.saikatsune.uhc.manager.ConfigManager;
-import net.saikatsune.uhc.manager.WorldManager;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.generator.BlockPopulator;
 
-import java.util.stream.Stream;
+import java.util.Random;
 
-public class CanePopulator {
+public class CanePopulator extends BlockPopulator {
 
-    private Game game;
+    private final int canePatchChance;
 
-    private static final BlockFace[] directNeighbours
-            = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
+    private final Material sugarCane;
 
-    private int caneSpawnHeight;
-    private double caneSpawnChance;
-    private int ticksPerIteration;
-    private int maxBlocksPerIteration;
-    private int currentX;
-    private int placedSugarcane;
-    private int boundZ;
-    private int boundX;
-
-    private WorldManager worldManager;
-    private ConfigManager configManager;
+    private final BlockFace[] blockFaces = new BlockFace[] { BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
 
     public CanePopulator() {
-        this.game = Game.getInstance();
-        this.configManager = game.getConfigManager();
-        this.worldManager = game.getWorldManager();
-        this.caneSpawnChance = 0.0155D;
-        this.caneSpawnHeight = 3;
-        this.placedSugarcane = 0;
-        this.ticksPerIteration = 3;
-        this.currentX = 0;
-        this.maxBlocksPerIteration = 10000;
-        this.boundX = configManager.getBorderSize();
-        this.boundZ = configManager.getBorderSize();
+        Game game = Game.getInstance();
+        this.canePatchChance = game.getConfig().getInt("POPULATORS.SUGARCANE.PERCENTAGE");
+        this.sugarCane = Material.SUGAR_CANE_BLOCK;
     }
 
-    public void initialize(World world) {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                int blocks = 0;
-                int xNegative = -boundX;
-                int zNegative = -boundZ;
+    private Block getHighestBlock(Chunk chunk, int x, int z) {
+        Block block = null;
+        for (int i = 127; i >= 0; ) {
+            if ((block = chunk.getBlock(x, i, z)).getTypeId() != 0)
+                return block;
+            i--;
+        }
+        return block;
+    }
 
-                while (xNegative < boundX) {
-                    while (boundZ < xNegative) {
-                        blocks++;
+    private void createCane(Block block, Random rand) {
+        boolean create = false;
+        for (BlockFace face : blockFaces) {
+            if (block.getRelative(face).getType().name().toLowerCase().contains("water"))
+                create = true;
+        }
+        if (!create)
+            return;
+        for (int i = 1; i < rand.nextInt(4) + 3; ) {
+            block.getRelative(0, i, 0).setType(sugarCane);
+            i++;
+        }
+    }
 
-                        if (blocks % maxBlocksPerIteration == 0)
-                            return;
-                        checkPlaceBlock(world.getBlockAt(xNegative, world.getHighestBlockYAt(xNegative, zNegative) - 1, zNegative));
-                        currentX = xNegative;
-                        zNegative++;
-                    }
-
-                    zNegative = -boundZ;
-
-                    currentX = xNegative;
-                    if (xNegative >= boundX - 10) {
-                        cancel();
-                    }
-                    xNegative++;
+    @Override
+    public void populate(World world, Random random, Chunk chunk) {
+        if (random.nextInt(100) < canePatchChance)
+            for (int i = 0; i < 16; i++) {
+                Block block;
+                if (random.nextBoolean()) {
+                    block = getHighestBlock(chunk, random.nextInt(16), i);
+                } else {
+                    block = getHighestBlock(chunk, i, random.nextInt(16));
                 }
+                if (block.getType() == Material.GRASS || block.getType() == Material.SAND)
+                    createCane(block, random);
             }
-        }.runTaskTimer(game, 0L, ticksPerIteration);
     }
-
-    public void checkPlaceBlock(Block block) {
-        if (block.getType() != Material.GRASS && block.getType() != Material.SAND)
-            return;
-        if (Stream.of(directNeighbours).noneMatch(blockFace -> (block.getRelative(blockFace).getType() == Material.STATIONARY_WATER)))
-            return;
-        if (Math.random() > caneSpawnChance)
-            return;
-        for (int i = 1; i <= caneSpawnHeight; i++)
-            block.getRelative(BlockFace.UP, i).setType(Material.SUGAR_CANE_BLOCK);
-        placedSugarcane++;
-    }
-
 }

@@ -10,7 +10,7 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 
 public class HorselessListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handleVehicleEnterEvent(VehicleEnterEvent event) {

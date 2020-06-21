@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 
 public class SimpleBoard {
 
-    private Player player;
+    private final Player player;
     private Scoreboard scoreboard;
     private Objective objective;
     private List<String> oldLines;

@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
-public class PlayerDecayListener implements Listener {
+public class LeavesDecayListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handleLeavesDecayEvent(LeavesDecayEvent event) {
@@ -32,7 +32,7 @@ public class PlayerDecayListener implements Listener {
                 Material.LEAVES || block.getType() == Material.LEAVES_2)) {
 
             block.setType(Material.AIR);
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE, 1));
+            block.getWorld().dropItem(location, new ItemStack(Material.APPLE, 1));
         }
 
         if ((random.nextDouble() <= 0.5 * 0.01D) && (block.getType() ==
@@ -40,7 +40,7 @@ public class PlayerDecayListener implements Listener {
 
             if(Scenarios.LuckyLeaves.isEnabled()) {
                 block.setType(Material.AIR);
-                block.getWorld().dropItemNaturally(location, new ItemStack(Material.GOLDEN_APPLE, 1));
+                block.getWorld().dropItem(location, new ItemStack(Material.GOLDEN_APPLE, 1));
             }
         }
 
@@ -65,7 +65,7 @@ public class PlayerDecayListener implements Listener {
                     block.getType() == Material.LEAVES_2 && player.getItemInHand().getType() == Material.SHEARS) {
 
                 block.setType(Material.AIR);
-                block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE, 1));
+                block.getWorld().dropItem(location, new ItemStack(Material.APPLE, 1));
 
             }
         }
@@ -75,14 +75,14 @@ public class PlayerDecayListener implements Listener {
                 block.getType() == Material.LEAVES_2 && player.getItemInHand().getType() != Material.SHEARS) {
 
             block.setType(Material.AIR);
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.APPLE, 1));
+            block.getWorld().dropItem(location, new ItemStack(Material.APPLE, 1));
         }
 
         if((random.nextDouble() <= game.getConfigManager().getFlintRate() * 0.01D) && block.getType() ==
                 Material.GRAVEL) {
 
             block.setType(Material.AIR);
-            block.getWorld().dropItemNaturally(location, new ItemStack(Material.FLINT, 1));
+            block.getWorld().dropItem(location, new ItemStack(Material.FLINT, 1));
 
         }
     }

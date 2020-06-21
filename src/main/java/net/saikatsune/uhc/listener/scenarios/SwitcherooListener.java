@@ -15,11 +15,11 @@ import java.util.HashMap;
 
 public class SwitcherooListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private HashMap<Player, Location> newLocation = new HashMap<>();
+    private final HashMap<Player, Location> newLocation = new HashMap<>();
 
     @EventHandler
     public void handleEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {

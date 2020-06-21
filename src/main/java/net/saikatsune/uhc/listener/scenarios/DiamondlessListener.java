@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class DiamondlessListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {

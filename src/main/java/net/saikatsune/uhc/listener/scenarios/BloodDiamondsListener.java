@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class BloodDiamondsListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handleBlockBreakEvent(BlockBreakEvent event) {
@@ -20,7 +20,7 @@ public class BloodDiamondsListener implements Listener {
         if(game.getGameStateManager().getCurrentGameState() instanceof IngameState) {
             if(event.getBlock().getType() == Material.DIAMOND_ORE) {
                 if(Scenarios.BloodDiamonds.isEnabled()) {
-                    player.setHealth(player.getHealth() - 1);
+                    player.damage(1);
                 }
             }
         }

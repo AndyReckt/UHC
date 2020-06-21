@@ -12,9 +12,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class BestPVEListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @EventHandler
     public void handleEntityDamageEvent(EntityDamageEvent event) {

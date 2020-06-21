@@ -9,10 +9,12 @@ import net.saikatsune.uhc.commands.editor.ScenariosEditorCommand;
 import net.saikatsune.uhc.commands.editor.WorldEditorCommand;
 import net.saikatsune.uhc.enums.GameType;
 import net.saikatsune.uhc.enums.PlayerState;
+import net.saikatsune.uhc.enums.ServerVersion;
 import net.saikatsune.uhc.gamestate.GameState;
 import net.saikatsune.uhc.gamestate.manager.GameStateManager;
 import net.saikatsune.uhc.handler.FileHandler;
 import net.saikatsune.uhc.handler.InventoryHandler;
+import net.saikatsune.uhc.populators.CanePopulator;
 import net.saikatsune.uhc.support.GlassBorderSupport;
 import net.saikatsune.uhc.support.LegacySupport;
 import net.saikatsune.uhc.tasks.ButcherTask;
@@ -63,6 +65,8 @@ public class Game extends JavaPlugin {
     private ScoreboardManager scoreboardManager;
     private SimpleBoardManager simpleBoardManager;
 
+    private CanePopulator canePopulator;
+
     private HashMap<String, GameType> gameType;
     private HashMap<Player, PlayerState> playerState;
     private HashMap<UUID, Integer> teamNumber;
@@ -84,6 +88,8 @@ public class Game extends JavaPlugin {
     private HashMap<Villager, UUID> playerBoundToVillager;
 
     private ArrayList<UUID> deadPlayersByUUID;
+
+    private HashMap<Location, UUID>protectedChest;
 
     private ArrayList<UUID> players;
     private ArrayList<Player> spectators;
@@ -121,6 +127,8 @@ public class Game extends JavaPlugin {
 
     private List<UUID> bestPvePlayers;
 
+    private String serverVersion;
+
     @Override
     public void onEnable() {
         this.createConfigFile();
@@ -144,6 +152,8 @@ public class Game extends JavaPlugin {
         teamManager = new TeamManager();
         databaseManager = new DatabaseManager();
         scoreboardManager = new ScoreboardManager();
+
+        canePopulator = new CanePopulator();
 
         if(!scoreboardManager.getScoreboardsFile().exists()) {
             saveResource("scoreboards.yml", false);
@@ -189,6 +199,8 @@ public class Game extends JavaPlugin {
         scenariosInList = new ArrayList<>();
 
         deadPlayersByUUID = new ArrayList<>();
+
+        protectedChest = new HashMap<>();
 
         scatterTask = new ScatterTask();
         timeTask = new TimeTask();
@@ -250,7 +262,7 @@ public class Game extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                worldManager.loadWorld("uhc_practice", 50, 1000);
+                worldManager.loadWorld("uhc_practice", 50, 5000);
             }
         }.runTaskLater(this, 20);
 
@@ -264,6 +276,27 @@ public class Game extends JavaPlugin {
             if(entity instanceof Villager) {
                 entity.remove();
             }
+        }
+
+        if(databaseActive) {
+            databaseManager.getTop10Kills();
+            databaseManager.getTop10Deaths();
+            databaseManager.getTop10Wins();
+
+            inventoryHandler.setupLeaderboardsInventory();
+        }
+
+        String packageName = getServer().getClass().getPackage().getName();
+        String version = packageName.substring(packageName.lastIndexOf('.') + 1);
+
+        getLogger().info("Configuring mining system to your version...");
+
+        if(version.contains("v1_7_R")) {
+            getLogger().info("You are using Spigot version 1.7.X.");
+            serverVersion = ServerVersion.V1_7_X.toString();
+        } else if(version.contains("v1_8_R")) {
+            getLogger().info("You are using Spigot version 1.8.X.");
+            serverVersion = ServerVersion.V1_8_X.toString();
         }
     }
 
@@ -315,6 +348,8 @@ public class Game extends JavaPlugin {
         getCommand("practice").setExecutor(new PracticeCommand());
         getCommand("forceenable").setExecutor(new ForceEnableCommand());
         getCommand("host").setExecutor(new HostCommand());
+        getCommand("disqualify").setExecutor(new DisqualifyCommand());
+        //getCommand("leaderboards").setExecutor(new LeaderboardsCommand());
 
         getCommand("worldeditor").setExecutor(new WorldEditorCommand());
         getCommand("configeditor").setExecutor(new ConfigEditorCommand());
@@ -332,8 +367,10 @@ public class Game extends JavaPlugin {
         pluginManager.registerEvents(new ConfigEditorCommand(), this);
         pluginManager.registerEvents(new BorderEditorCommand(), this);
         pluginManager.registerEvents(new ScenariosEditorCommand(), this);
+        pluginManager.registerEvents(new DisqualifyCommand(), this);
 
         pluginManager.registerEvents(new AlertsCommand(), this);
+        pluginManager.registerEvents(new LeaderboardsCommand(), this);
 
         pluginManager.registerEvents(new ConnectionListener(), this);
         pluginManager.registerEvents(new BlockChangeListener(), this);
@@ -344,9 +381,9 @@ public class Game extends JavaPlugin {
 
         pluginManager.registerEvents(new PlayerPortalListener(), this);
         pluginManager.registerEvents(new PlayerTeleportListener(), this);
-        pluginManager.registerEvents(new PlayerCraftListener(), this);
+        pluginManager.registerEvents(new ItemCraftListener(), this);
         pluginManager.registerEvents(new PlayerConsumeListener(), this);
-        pluginManager.registerEvents(new PlayerDecayListener(), this);
+        pluginManager.registerEvents(new LeavesDecayListener(), this);
         pluginManager.registerEvents(new PlayerExitVehicleListener(), this);
 
         pluginManager.registerEvents(new CutCleanListener(), this);
@@ -373,6 +410,7 @@ public class Game extends JavaPlugin {
         pluginManager.registerEvents(new VeinMinerListener(), this);
         pluginManager.registerEvents(new BestPVEListener(), this);
         pluginManager.registerEvents(new SwordlessListener(), this);
+        pluginManager.registerEvents(new SafeLootListener(), this);
 
         pluginManager.registerEvents(new WebCageListener(), this);
         pluginManager.registerEvents(new NoCleanListener(), this);
@@ -422,6 +460,9 @@ public class Game extends JavaPlugin {
         config.addDefault("CHAT.MOD-PREFIX", "&3&l[UHC-Mod] ");
         config.addDefault("CHAT.SPECTATOR-PREFIX", "&7[Spectator] ");
         config.addDefault("CHAT.TEAM-PREFIX", "&7[&aTeam %teamNumber%&7] ");
+
+        config.addDefault("POPULATORS.SUGARCANE.ENABLED", true);
+        config.addDefault("POPULATORS.SUGARCANE.PERCENTAGE", 50);
 
         config.options().copyDefaults(true);
         saveConfig();
@@ -685,8 +726,16 @@ public class Game extends JavaPlugin {
         return gameHost;
     }
 
+    public HashMap<Location, UUID> getProtectedChest() {
+        return protectedChest;
+    }
+
     public List<UUID> getBestPvePlayers() {
         return bestPvePlayers;
+    }
+
+    public String getServerVersion() {
+        return serverVersion;
     }
 }
 

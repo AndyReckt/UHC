@@ -12,9 +12,9 @@ import org.bukkit.entity.Player;
 
 public class StaffCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -35,6 +35,7 @@ public class StaffCommand implements CommandExecutor {
                                 }
 
                                 game.getGameManager().setPlayerState(player, PlayerState.SPECTATOR);
+                                player.getInventory().clear();
                                 game.getInventoryHandler().handleStaffInventory(player);
 
                                 game.getReceivePvpAlerts().add(player.getUniqueId());
@@ -61,6 +62,8 @@ public class StaffCommand implements CommandExecutor {
 
                             player.teleport(game.getLocationManager().getLocation("Spawn-Location"));
                             player.sendMessage(prefix + ChatColor.RED + "You are no longer in Staff-Mode!");
+
+                            game.getInventoryHandler().handleLobbyInventory(player);
                         } else {
                             player.sendMessage(prefix + ChatColor.RED + "The game has already started!");
                         }

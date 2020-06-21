@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class RodlessListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     @EventHandler
     public void handlePlayerInteractEvent(PlayerInteractEvent event) {

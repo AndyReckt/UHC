@@ -11,13 +11,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class PlayerChatListener implements Listener {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
-    private String specPrefix = game.getConfig().getString("CHAT.SPECTATOR-PREFIX").replace("&", "§");
-    private String hostPrefix = game.getConfig().getString("CHAT.HOST-PREFIX").replace("&", "§");
-    private String modPrefix = game.getConfig().getString("CHAT.MOD-PREFIX").replace("&", "§");
+    private final String specPrefix = game.getConfig().getString("CHAT.SPECTATOR-PREFIX").replace("&", "§");
+    private final String hostPrefix = game.getConfig().getString("CHAT.HOST-PREFIX").replace("&", "§");
+    private final String modPrefix = game.getConfig().getString("CHAT.MOD-PREFIX").replace("&", "§");
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void handleASyncPlayerChatEvent(AsyncPlayerChatEvent event) {

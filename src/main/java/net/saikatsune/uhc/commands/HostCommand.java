@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 
 public class HostCommand implements CommandExecutor {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
-    private String prefix = game.getPrefix();
+    private final String prefix = game.getPrefix();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

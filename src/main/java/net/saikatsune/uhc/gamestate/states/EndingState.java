@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class EndingState extends GameState {
 
-    private Game game = Game.getInstance();
+    private final Game game = Game.getInstance();
 
     public void start() {
         new BukkitRunnable() {
