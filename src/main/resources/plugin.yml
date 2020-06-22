@@ -1,6 +1,6 @@
 name: UHC
 author: Saikatsune
-version: 1.0.0-A
+version: 1.0.0-B
 main: net.saikatsune.uhc.Game
 
 commands:
